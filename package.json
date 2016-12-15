@@ -1,0 +1,25 @@
+{
+  "name": "voting-app",
+  "version": "1.0.0",
+  "description": "voting app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiloATH/VotingApp.git"
+  },
+  "keywords": [
+    "voting"
+  ],
+  "author": "Milo Hartsoe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MiloATH/VotingApp/issues"
+  },
+  "homepage": "https://github.com/MiloATH/VotingApp#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
