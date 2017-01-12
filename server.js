@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 'use strict';
 
 var express = require('express');
@@ -37,5 +36,3 @@ var port = process.env.PORT || 8080;
 app.listen(port,  function () {
 	console.log('Node.js listening on port ' + port + '...');
 });
-=======
->>>>>>> c425b0ee18246a8c9d523a205212bc8431ac907f
