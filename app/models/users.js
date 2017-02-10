@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 var User = new Schema({
 	github: {
-		id: String,
+		id: Schema.Types.ObjectId,
 		displayName: String,
 		username: String,
       publicRepos: Number
