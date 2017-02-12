@@ -3,12 +3,13 @@
 var path = process.cwd();
 var PollHandler = require(path + '/app/controllers/pollHandler.server.js');
 
-module.exports = function (app, passport) {
+module.exports = function(app, passport) {
 
-	function isLoggedIn (req, res, next) {
+	function isLoggedIn(req, res, next) {
 		if (req.isAuthenticated()) {
 			return next();
-		} else {
+		}
+		else {
 			res.redirect('/');
 		}
 	}
@@ -16,23 +17,25 @@ module.exports = function (app, passport) {
 	var pollHandler = new PollHandler();
 
 	app.route('/')
-		.get(function (req, res) {
-			res.render('home',{isLoggedIn: req.isAuthenticated()});
+		.get(function(req, res) {
+			res.render('home', {
+				isLoggedIn: req.isAuthenticated()
+			});
 		});
 
 	app.route('/login')
-		.get(function (req, res) {
+		.get(function(req, res) {
 			res.sendFile(path + '/public/login.html');
 		});
 
 	app.route('/logout')
-		.get(function (req, res) {
+		.get(function(req, res) {
 			req.logout();
 			res.redirect('/login');
 		});
 
 	app.route('/profile')
-		.get(isLoggedIn, function (req, res) {
+		.get(isLoggedIn, function(req, res) {
 			res.sendFile(path + '/public/profile.html');
 		});
 

@@ -6,9 +6,16 @@ var Schema = mongoose.Schema;
 var Poll = new Schema({
     id: Schema.Types.ObjectId,
     question: String,
-    options: [{ answer: String, vote: Number }],
+    options: [{
+        answer: String,
+        vote: Number
+    }],
     creatorUserid: String,
     voterUserid: [],
+    date: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 module.exports = mongoose.model('Poll', Poll);
