@@ -1,52 +1,36 @@
-'use strict';
-
-var GitHubStrategy = require('passport-github').Strategy;
+var LocalStrategy = require('passport-local');
 var User = require('../models/users');
-var configAuth = require('./auth');
+var bcrypt = require('bcrypt');
 
-module.exports = function (passport) {
-	passport.serializeUser(function (user, done) {
-		done(null, user.id);
+module.exports = function(passport) {
+	passport.serializeUser(function(user, done) {
+		done(null, user._id);
 	});
 
-	passport.deserializeUser(function (id, done) {
-		User.findById(id, function (err, user) {
+	passport.deserializeUser(function(id, done) {
+		User.findById(id, function(err, user) {
 			done(err, user);
 		});
 	});
 
-	passport.use(new GitHubStrategy({
-		clientID: configAuth.githubAuth.clientID,
-		clientSecret: configAuth.githubAuth.clientSecret,
-		callbackURL: configAuth.githubAuth.callbackURL
-	},
-	function (token, refreshToken, profile, done) {
-		process.nextTick(function () {
-			User.findOne({ 'github.id': profile.id }, function (err, user) {
+	passport.use(new LocalStrategy(
+		function(username, password, done) {
+			console.log("Trying to find " + username);
+			User.findOne({
+				username: username
+			}, function(err, user) {
+				console.log('User ' + username + ' attempted to log in.');
 				if (err) {
 					return done(err);
 				}
-
-				if (user) {
-					return done(null, user);
-				} else {
-					var newUser = new User();
-
-					newUser.github.id = profile.id;
-					newUser.github.username = profile.username;
-					newUser.github.displayName = profile.displayName;
-					newUser.github.publicRepos = profile._json.public_repos;
-					newUser.nbrClicks.clicks = 0;
-
-					newUser.save(function (err) {
-						if (err) {
-							throw err;
-						}
-
-						return done(null, newUser);
-					});
+				if (!user) {
+					return done(null, false);
 				}
+				if (!bcrypt.compareSync(password, user.password)) {
+					return done(null, false);
+				}
+				return done(null, user);
 			});
-		});
-	}));
+		}
+	));
 };
