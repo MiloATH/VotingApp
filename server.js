@@ -5,7 +5,7 @@ var passport = require('passport');
 var exphbs = require('express-handlebars');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var config = require('../sensitive_data/config.js');
+//var config = require('../sensitive_data/config.js');//For c9.io
 
 var app = express();
 require('dotenv').load();
@@ -19,16 +19,18 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main'
+}));
 app.set('view engine', 'handlebars');
 
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(session({
-	secret: process.env.SESSION_SECRET || config.SESSION_SECRET,
-	resave: true,
-	saveUninitialized: true
+    secret: process.env.SESSION_SECRET || config.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true
 }));
 
 app.use(passport.initialize());
@@ -37,6 +39,6 @@ app.use(passport.session());
 routes(app, passport);
 
 var port = process.env.PORT || config.PORT || 8080;
-app.listen(port,  function () {
-	console.log('Listening on port ' + port + '...');
+app.listen(port, function() {
+    console.log('Listening on port ' + port + '...');
 });

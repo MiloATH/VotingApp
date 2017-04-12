@@ -1,70 +1,125 @@
 var signup = require('../controllers/signup.js');
 var Polls = require('../models/polls.js');
+var shortid = require('shortid');
 
 module.exports = function(app, passport) {
 
 
-	function isLoggedIn(req, res, next) {
-		if (req.isAuthenticated()) {
-			return next();
-		}
-		else {
-			res.redirect('/login');
-		}
-	}
+    function isLoggedIn(req, res, next) {
+        if (req.isAuthenticated()) {
+            return next();
+        } else {
+            res.redirect('/login');
+        }
+    }
 
-	app.route('/')
-		.get(function(req, res) {
-			res.render('home', {
-				isLoggedIn: req.isAuthenticated()
-			});
-		});
+    app.route('/')
+        .get(function(req, res) {
+            res.render('home', {
+                isLoggedIn: req.isAuthenticated()
+            });
+        });
 
-	app.route('/login')
-		.get(function(req, res) {
-			res.render('login', {
-				isLoggedIn: req.isAuthenticated()
-			});
-		})
-		.post(passport.authenticate('local', {
-            failureRedirect: '/login'//TODO: Should tell the user there was an error.
+    app.route('/login')
+        .get(function(req, res) {
+            res.render('login', {
+                isLoggedIn: req.isAuthenticated()
+            });
+        })
+        .post(passport.authenticate('local', {
+            failureRedirect: '/login' //TODO: Should tell the user there was an error.
         }), (req, res) => {
             res.redirect('/profile');
         });
 
-	app.route('/signup')
-		.get(function(req, res) {
-			res.render('signup', {
-				isLoggedIn: req.isAuthenticated()
-			});
-		})
-		.post(signup,
-			passport.authenticate('local', {
-				failureRedirect: '/signup'//TODO: Should tell the user there was an error.
-			}),
-			(req, res, next) => {
-				res.redirect('/profile');
-			});
+    app.route('/signup')
+        .get(function(req, res) {
+            res.render('signup', {
+                isLoggedIn: req.isAuthenticated()
+            });
+        })
+        .post(signup,
+            passport.authenticate('local', {
+                failureRedirect: '/signup' //TODO: Should tell the user there was an error.
+            }),
+            (req, res, next) => {
+                res.redirect('/profile');
+            });
 
-	app.route('/logout')
-		.get(function(req, res) {
-			req.logout();
-			res.redirect('/login');
-		});
+    app.route('/logout')
+        .get(function(req, res) {
+            req.logout();
+            res.redirect('/login');
+        });
 
-	app.route('/profile')
-		.get(isLoggedIn, function(req, res) {
-			res.render('profile', {
-				isLoggedIn: req.isAuthenticated()
-			});
-		});
+    app.route('/profile')
+        .get(isLoggedIn, function(req, res) {
+            res.render('profile', {
+                isLoggedIn: req.isAuthenticated()
+            });
+        });
+    app.route('/make')
+        .get(isLoggedIn, function(req, res) {
+            res.render('make');
+        })
 
-	//API
-	app.route('/api/vote')
-		.post(isLoggedIn, function(req, res) {
-			var pollId = req.body.poll;
-			var vote = req.body.vote;
-			
-		});
+    app.route('/polls/:id')
+        .get(function(req, res) {
+            var id = req.params.id;
+            if (shortid.isValid(id)) {
+                Polls.findOne({
+                    _id: id
+                }, function(err, poll) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    var voted = (req.isAuthenticated()) ? poll.voterUserid.includes(req.user.id) : false;
+                    res.render('poll', {
+                        question: poll.question,
+                        options: poll.options,
+                        createdDate: poll.date,
+                        voted: voted
+                    });
+                });
+            }
+        });
+    //API
+    app.route('/api/makePoll')
+        .post(isLoggedIn, function(req, res) {
+            var question = req.body.question;
+            var inputOptions = req.body.options;
+            var verifiedOptions = [];
+            for (var i in inputOptions) {
+                if (i.match(/answer[0-9]+/)) {
+                    verifiedOptions.push({
+                        "answer": inputOptions[i],
+                        "votes": 0
+                    })
+                }
+            }
+            var poll = new Polls({
+                question: question,
+                options: verifiedOptions,
+                creatorUserid: req.user._id
+            });
+            poll.save(function(err, data) {
+                if (err) {
+                    console.log(err);
+                    res.render('make', {
+                        isLoggedIn: req.isAuthenticated(),
+                        msg: "Error while making poll."
+                    })
+                } else {
+                    res.redirect('/polls/' + data._id); //TODO: redirect to new poll
+                }
+            });
+        })
+
+    app.route('/api/vote')
+        .post(isLoggedIn, function(req, res) {
+            var pollId = req.body.poll;
+            var vote = req.body.vote;
+
+        });
 
 };

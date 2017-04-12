@@ -7,14 +7,12 @@ module.exports = function(req, res, next) {
     }, function(err, user) {
         if (err) {
             next(err);
-        }
-        else if (user) {
+        } else if (user) {
             res.render('signup', {
                 msg: "Username already taken.",
                 isLoggedIn: req.isAuthenticated()
             });
-        }
-        else {
+        } else {
             var hash = bcrypt.hashSync(req.body.password, 8);
             var newUser = new User({
                 username: req.body.username,
@@ -24,8 +22,7 @@ module.exports = function(req, res, next) {
                 if (err) {
 
                     res.redirect('/');
-                }
-                else {
+                } else {
                     next(null, user);
                 }
             });
