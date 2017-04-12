@@ -55,7 +55,9 @@ module.exports = function(app, passport) {
     app.route('/profile')
         .get(isLoggedIn, function(req, res) {
             res.render('profile', {
-                isLoggedIn: req.isAuthenticated()
+                isLoggedIn: req.isAuthenticated(),
+                id: req.user._id,
+                username: req.user.username
             });
         });
     app.route('/make')
@@ -73,12 +75,14 @@ module.exports = function(app, passport) {
                     if (err) {
                         console.log(err);
                     }
-                    var voted = (req.isAuthenticated()) ? poll.voterUserid.includes(req.user.id) : false;
+                    var voted = (req.isAuthenticated()) ?
+                        poll.voterUserid.includes(req.user.id) : false;
                     res.render('poll', {
                         question: poll.question,
                         options: poll.options,
                         createdDate: poll.date,
-                        voted: voted
+                        voted: voted,
+                        _id: poll.id
                     });
                 });
             }
@@ -115,10 +119,35 @@ module.exports = function(app, passport) {
             });
         })
 
-    app.route('/api/vote')
-        .post(isLoggedIn, function(req, res) {
+    app.route('/api/vote/')
+        .post(function(req, res) {
             var pollId = req.body.poll;
-            var vote = req.body.vote;
+            var answer = req.body.answer;
+            Polls.findOne({
+                _id: pollId
+            }, function(err, poll) {
+                //console.log(poll);
+                /*if((req.isAuthenticated()) ?
+                    poll.voterUserid.includes(req.user.id) : false){
+                        //User already voted
+                    }*/
+                var found = false;
+                for (var i = 0; i < poll.options.length; i++) {
+                    if (answer == poll.options[i].answer) {
+                        poll.options[i].votes++;
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    poll.options.push({
+                        answer: answer,
+                        votes: 0
+                    })
+                }
+                console.log(poll);
+                poll.save();
+                res.redirect('/polls/' + pollId);
+            })
 
         });
 
