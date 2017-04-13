@@ -3,4 +3,12 @@
     <p>Username: {{username}} </p>
     <a class="menu" href="/">Home</a>
     <a class="menu" href="/logout">Logout</a>
+    {{#each myPolls}}
+        <h3>{{this.question}}</h3>
+        <ol>
+            {{#each this.options}}
+                <li>{{this.answer}}</li>
+            {{/each}}
+        </ol>
+    {{/each}}
 </div>

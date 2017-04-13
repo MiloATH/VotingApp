@@ -15,9 +15,15 @@ module.exports = function(app, passport) {
 
     app.route('/')
         .get(function(req, res) {
-            res.render('home', {
-                isLoggedIn: req.isAuthenticated()
-            });
+            Polls.find({}).limit(20).exec(function(err, polls) {
+                if (err) {
+                    console.log(err);
+                }
+                res.render('home', {
+                    isLoggedIn: req.isAuthenticated(),
+                    polls: polls
+                });
+            })
         });
 
     app.route('/login')
@@ -54,16 +60,24 @@ module.exports = function(app, passport) {
 
     app.route('/profile')
         .get(isLoggedIn, function(req, res) {
-            res.render('profile', {
-                isLoggedIn: req.isAuthenticated(),
-                id: req.user._id,
-                username: req.user.username
-            });
+            Polls.find({
+                creatorUserid: req.user._id
+            }, function(err, polls) {
+                res.render('profile', {
+                    isLoggedIn: req.isAuthenticated(),
+                    id: req.user._id,
+                    username: req.user.username,
+                    myPolls: polls
+                });
+            })
+
         });
     app.route('/make')
         .get(isLoggedIn, function(req, res) {
-            res.render('make');
-        })
+            res.render('make', {
+                isLoggedIn: req.isAuthenticated()
+            });
+        });
 
     app.route('/polls/:id')
         .get(function(req, res) {
@@ -78,6 +92,7 @@ module.exports = function(app, passport) {
                     var voted = (req.isAuthenticated()) ?
                         poll.voterUserid.includes(req.user.id) : false;
                     res.render('poll', {
+                        isLoggedIn: req.isAuthenticated(),
                         question: poll.question,
                         options: poll.options,
                         createdDate: poll.date,
@@ -144,11 +159,16 @@ module.exports = function(app, passport) {
                         votes: 0
                     })
                 }
-                console.log(poll);
+                if (req, isAuthenticated()) {
+                    poll.voterUserid.push(req.user._id);
+                }
                 poll.save();
                 res.redirect('/polls/' + pollId);
             })
 
         });
-
+    app.route('/api/delete')
+        .delete(isLoggedIn, function(req, res) {
+            console.log(req.body);
+        });
 };
