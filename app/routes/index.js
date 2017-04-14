@@ -167,8 +167,27 @@ module.exports = function(app, passport) {
             })
 
         });
+
     app.route('/api/delete')
         .delete(isLoggedIn, function(req, res) {
-            console.log(req.body);
+            var pollId = req.body.pollId;
+            var userId = req.user._id;
+            Polls.findOne({
+                _id: pollId
+            }, function(err, poll) {
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        error: "Error when trying to delete a poll"
+                    });
+                }
+                if (poll && poll.creatorUserid == userId) {
+                    poll.remove();
+                    res.json({
+                        success: "Poll Deleted"
+                    });
+                    //res.redirect('/profile');
+                }
+            });
         });
 };
