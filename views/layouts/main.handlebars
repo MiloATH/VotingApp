@@ -5,7 +5,7 @@
 <head>
     <title>Voting App</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/public/main.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/main.css" />
 </head>
 
 <body>
@@ -26,6 +26,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {{#if isLoggedIn}}
                     <li><a href="/profile">Profile</a></li>
+                    <li><a href="/make">New Poll</a></li>
                     <li><a href="/logout">Logout</a></li>
                     {{else}}
                     <li><a href="/login">Login</a></li>
@@ -44,6 +45,7 @@
         <!-- /.container-fluid -->
     </nav>
     {{{body}}}
+    <div class="alert fixed-msg" id="msg" role="alert">{{msg}}</div>
 </body>
 <script src="/public/request.js"></script>
 <script src="/public/jquery.js"></script>

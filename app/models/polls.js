@@ -10,10 +10,15 @@ var Poll = new Schema({
     question: String,
     options: [{
         answer: String,
-        votes: Number
+        votes: Number,
+        _id: {
+            type: String,
+            'default': shortid.generate
+        }
     }],
     creatorUserid: String,
     voterUserid: [],
+    voterIP: [],
     date: {
         type: Date,
         default: Date.now

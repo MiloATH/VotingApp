@@ -1,12 +1,6 @@
 <div class="container">
-    <h2>{{question}}</h2>
+    <h2 class="title" id="{{pollId}}">{{question}}</h2>
     {{#each options}}
-    <li>{{this.answer}} : {{this.votes}}</li>
+    <li id="{{this.answer}}">{{this.answer}} : <span id="votes">{{this.votes}}</span><button onClick="vote('{{this.answer}}')">VOTE</button></li>
     {{/each}}
-    <p>Voted? {{voted}}</p>
-    <form action="/api/vote" method="post">
-        <input type="hidden" value="{{_id}}" name="poll">
-        <input type="text" name="answer">
-        <input type="submit" value="Submit">
-    </form>
 </div>

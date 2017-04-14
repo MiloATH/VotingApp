@@ -5,7 +5,10 @@
     <a class="menu" href="/logout">Logout</a>
     {{#each myPolls}}
     <div id="{{this._id}}">
-        <h3 onClick="removePoll('{{this._id}}')">{{this.question}}</h3>
+        <a href="/polls/{{this._id}}">
+            <h3>{{this.question}}</h3>
+        </a>
+
         <ol>
             {{#each this.options}}
                 <li>{{this.answer}}</li>

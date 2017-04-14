@@ -13,6 +13,19 @@ module.exports = function(app, passport) {
         }
     }
 
+    function voted(req, res, poll, next) {
+        var voted = false;
+        if (req.isAuthenticated()) {
+            var userId = req.user._id;
+            var voted = poll.voterUserid.indexOf(userId);
+            voted = voted || voted > -1;
+        }
+        if (req.ip) {
+            voted = voted || poll.voterIP.indexOf(req.ip) > -1;
+        }
+        next(voted);
+    }
+
     app.route('/')
         .get(function(req, res) {
             Polls.find({}).limit(20).exec(function(err, polls) {
@@ -88,20 +101,26 @@ module.exports = function(app, passport) {
                 }, function(err, poll) {
                     if (err) {
                         console.log(err);
+                    } else if (poll) {
+                        voted(req, res, poll, function(voted) {
+                            res.render('poll', {
+                                isLoggedIn: req.isAuthenticated(),
+                                question: poll.question,
+                                options: poll.options,
+                                createdDate: poll.date,
+                                pollId: poll.id,
+                                voted: voted
+                            });
+                        });
+                    } else {
+                        res.render('404', {
+                            msg: "Poll not found."
+                        });
                     }
-                    var voted = (req.isAuthenticated()) ?
-                        poll.voterUserid.includes(req.user.id) : false;
-                    res.render('poll', {
-                        isLoggedIn: req.isAuthenticated(),
-                        question: poll.question,
-                        options: poll.options,
-                        createdDate: poll.date,
-                        voted: voted,
-                        _id: poll.id
-                    });
                 });
             }
         });
+
     //API
     app.route('/api/makePoll')
         .post(isLoggedIn, function(req, res) {
@@ -134,38 +153,62 @@ module.exports = function(app, passport) {
             });
         })
 
-    app.route('/api/vote/')
+    app.route('/api/vote')
         .post(function(req, res) {
             var pollId = req.body.poll;
             var answer = req.body.answer;
             Polls.findOne({
                 _id: pollId
             }, function(err, poll) {
-                //console.log(poll);
-                /*if((req.isAuthenticated()) ?
-                    poll.voterUserid.includes(req.user.id) : false){
-                        //User already voted
-                    }*/
-                var found = false;
-                for (var i = 0; i < poll.options.length; i++) {
-                    if (answer == poll.options[i].answer) {
-                        poll.options[i].votes++;
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    poll.options.push({
-                        answer: answer,
-                        votes: 0
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        "error": "Poll not found. Vote not counted."
+                    });
+                    return;
+                } else if (poll) {
+                    voted(req, res, poll, function(voted) {
+                        if (voted) {
+                            res.json({
+                                "error": "Already voted."
+                            });
+                            return;
+                        } else {
+                            var found = false;
+                            for (var i = 0; i < poll.options.length; i++) {
+                                if (answer == poll.options[i].answer) {
+                                    poll.options[i].votes++;
+                                    found = true;
+                                }
+                            }
+                            if (!found) {
+                                poll.options.push({
+                                    answer: answer,
+                                    votes: 0
+                                })
+                            }
+                            if (req.isAuthenticated()) {
+                                poll.voterUserid.push(req.user._id);
+                            }
+                            if (req.ip) {
+                                poll.voterIP.push(req.ip);
+                            }
+                            poll.save(function(err, savedPoll) {
+                                if (err) {
+                                    console.log(err)
+                                    res.json({
+                                        "error": "Poll not saved."
+                                    });
+                                } else {
+                                    res.json({
+                                        "success": "Vote counted."
+                                    });
+                                }
+                            });
+                        }
                     })
                 }
-                if (req, isAuthenticated()) {
-                    poll.voterUserid.push(req.user._id);
-                }
-                poll.save();
-                res.redirect('/polls/' + pollId);
             })
-
         });
 
     app.route('/api/delete')
@@ -190,4 +233,15 @@ module.exports = function(app, passport) {
                 }
             });
         });
+
+    //404 Not Found
+    app.use((req, res, next) => {
+        if (req.accepts('html')) {
+            res.render('404');
+        } else {
+            res.status(404)
+                .type('text')
+                .send('Not Found');
+        }
+    });
 };
