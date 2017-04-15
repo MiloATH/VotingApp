@@ -1,6 +1,39 @@
 <div class="container">
     <h2 class="title" id="{{pollId}}">{{question}}</h2>
     {{#each options}}
-    <li id="{{this.answer}}">{{this.answer}} : <span id="votes">{{this.votes}}</span><button onClick="vote('{{this.answer}}')">VOTE</button></li>
+        <li id="{{this.answer}}">{{this.answer}} : <span id="votes">{{this.votes}}</span><button onClick="vote('{{this.answer}}')">VOTE</button></li>
     {{/each}}
+    <div style="width: 300px;">
+        <canvas id="pie-chart-area" width="300" height="300" />
+    </div>
+    <div id="legend"></div>
+    <script src="/public/jquery.js"></script>
+    <script src="/public/Chart.js"></script>
+    <script>
+        var pieData =[
+            {{! Has to recreate data to stop xss.}}
+            {{#each chartData}}
+            {
+                value:{{this.value}},
+                color:"{{this.color}}",
+                highlight:"{{this.highlight}}",
+                label:"{{this.label}}"
+            },
+            {{/each}}
+        ];
+        var pie_ctx = document.getElementById("pie-chart-area").getContext("2d");
+        window.myPie = new Chart(pie_ctx).Doughnut(pieData, {
+            legendTemplate: '<ul>' +
+                '<% for (var i=0; i<pieData.length; i++) { %>' +
+                '<li>' +
+                '<span id="legend-color" style=\"background-color:<%=pieData[i].color%>\"></span>' +
+                '<% if (pieData [i].label) { %><%= pieData[i].label %><% } %>' +
+                '</li>' +
+                '<% } %>' +
+                '</ul>'
+        });
+
+        var legend = myPie.generateLegend();
+        $("#legend").html(legend);
+    </script>
 </div>

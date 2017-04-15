@@ -1,6 +1,9 @@
 var signup = require('../controllers/signup.js');
 var Polls = require('../models/polls.js');
 var shortid = require('shortid');
+var colors = require('../utils/colors.js');
+var HIGHLIGHT_LUMINANCE = .2;
+
 
 module.exports = function(app, passport) {
 
@@ -13,17 +16,54 @@ module.exports = function(app, passport) {
         }
     }
 
+    //From https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+    function ColorLuminance(hex, lum) {
+
+        // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+        lum = lum || 0;
+
+        // convert to decimal and change luminosity
+        var rgb = "#",
+            c, i;
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i * 2, 2), 16);
+            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+            rgb += ("00" + c).substr(c.length);
+        }
+
+        return rgb;
+    }
+
     function voted(req, res, poll, next) {
         var voted = false;
         if (req.isAuthenticated()) {
             var userId = req.user._id;
-            var voted = poll.voterUserid.indexOf(userId);
-            voted = voted || voted > -1;
+            var index = poll.voterUserid.indexOf(userId);
+            voted = voted || index > -1;
         }
         if (req.ip) {
             voted = voted || poll.voterIP.indexOf(req.ip) > -1;
         }
         next(voted);
+    }
+
+
+    //TODO: Make sure output doesn't allow xxs
+    function getChartData(poll, next) {
+        var data = [];
+        for (var i = 0; i < poll.options.length; i++) {
+            data.push({
+                value: poll.options[i].votes,
+                color: poll.options[i].color,
+                highlight: ColorLuminance(poll.options[i].color, HIGHLIGHT_LUMINANCE),
+                label: poll.options[i].answer
+            });
+        }
+        next(data);
     }
 
     app.route('/')
@@ -85,6 +125,7 @@ module.exports = function(app, passport) {
             })
 
         });
+
     app.route('/make')
         .get(isLoggedIn, function(req, res) {
             res.render('make', {
@@ -103,13 +144,16 @@ module.exports = function(app, passport) {
                         console.log(err);
                     } else if (poll) {
                         voted(req, res, poll, function(voted) {
-                            res.render('poll', {
-                                isLoggedIn: req.isAuthenticated(),
-                                question: poll.question,
-                                options: poll.options,
-                                createdDate: poll.date,
-                                pollId: poll.id,
-                                voted: voted
+                            getChartData(poll, function(data) {
+                                res.render('poll', {
+                                    isLoggedIn: req.isAuthenticated(),
+                                    question: poll.question,
+                                    options: poll.options,
+                                    createdDate: poll.date,
+                                    pollId: poll.id,
+                                    chartData: data,
+                                    voted: voted
+                                });
                             });
                         });
                     } else {
@@ -127,11 +171,13 @@ module.exports = function(app, passport) {
             var question = req.body.question;
             var inputOptions = req.body.options;
             var verifiedOptions = [];
+            var colorSeed = Math.floor(Math.random() * colors.colors.length);
             for (var i in inputOptions) {
                 if (i.match(/answer[0-9]+/)) {
                     verifiedOptions.push({
-                        "answer": inputOptions[i],
-                        "votes": 0
+                        answer: inputOptions[i],
+                        votes: 0,
+                        color: colors.colors[(++colorSeed) % colors.colors.length]
                     })
                 }
             }
@@ -184,14 +230,17 @@ module.exports = function(app, passport) {
                             if (!found) {
                                 poll.options.push({
                                     answer: answer,
-                                    votes: 0
+                                    votes: 0,
+                                    color: colors.colors[Math.floor(Math.random() * colors.colors.length)]
                                 })
                             }
                             if (req.isAuthenticated()) {
-                                poll.voterUserid.push(req.user._id);
+                                var userId = req.user._id;
+                                poll.voterUserid.push(userId);
                             }
                             if (req.ip) {
-                                poll.voterIP.push(req.ip);
+                                var ip = req.ip
+                                poll.voterIP.push(ip);
                             }
                             poll.save(function(err, savedPoll) {
                                 if (err) {

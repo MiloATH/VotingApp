@@ -25,12 +25,12 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     {{#if isLoggedIn}}
-                    <li><a href="/profile">Profile</a></li>
-                    <li><a href="/make">New Poll</a></li>
-                    <li><a href="/logout">Logout</a></li>
+                        <li><a href="/profile">Profile</a></li>
+                        <li><a href="/make">New Poll</a></li>
+                        <li><a href="/logout">Logout</a></li>
                     {{else}}
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/signup">Signup</a></li>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/signup">Signup</a></li>
                     {{/if}}
                 </ul>
                 <form class="navbar-form navbar-right">
@@ -49,4 +49,5 @@
 </body>
 <script src="/public/request.js"></script>
 <script src="/public/jquery.js"></script>
+
 </html>

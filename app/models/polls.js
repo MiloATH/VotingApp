@@ -11,6 +11,7 @@ var Poll = new Schema({
     options: [{
         answer: String,
         votes: Number,
+        color: String,
         _id: {
             type: String,
             'default': shortid.generate

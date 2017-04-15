@@ -1,5 +1,12 @@
-.fixed-msg{
+.fixed-msg {
     position: fixed;
     bottom: 0;
     right: 0;
+}
+
+#legend-color {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
 }

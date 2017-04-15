@@ -1,19 +1,21 @@
-<div class="container">
-    <p>ID: {{id}}</p>
+<div class="container">\
     <p>Username: {{username}} </p>
-    <a class="menu" href="/">Home</a>
-    <a class="menu" href="/logout">Logout</a>
-    {{#each myPolls}}
-    <div id="{{this._id}}">
-        <a href="/polls/{{this._id}}">
-            <h3>{{this.question}}</h3>
-        </a>
-
-        <ol>
-            {{#each this.options}}
-                <li>{{this.answer}}</li>
-            {{/each}}
-        </ol>
+    <div class="panel panel-default">
+        <div class="panel-heading">Polls</div>
+        <div class="panel-body">
+            <div class="list-group">
+                {{#each myPolls}}
+                    <a href="/polls/{{this._id}}" class="list-group-item">
+                        <div id="{{this._id}}">
+                            <h4>{{this.question}}</h4>|
+                            {{#each this.options}}
+                                <span>{{this.answer}}</span> |
+                            {{/each}}
+                        </div>
+                    </a>
+                    <button onclick="removePoll('{{this._id}}')">DELETE</button>
+                {{/each}}
+            </div>
+        </div>
     </div>
-    {{/each}}
 </div>
