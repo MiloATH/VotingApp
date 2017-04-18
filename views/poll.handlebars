@@ -1,17 +1,35 @@
 <div class="container">
-    <h2 class="title" id="{{pollId}}">{{question}}</h2>
-    {{#each options}}
-        <li id="{{this.answer}}">{{this.answer}} : <span id="votes">{{this.votes}}</span><button onClick="vote('{{this.answer}}')">VOTE</button></li>
-    {{/each}}
-    <div style="width: 300px;">
-        <canvas id="pie-chart-area" width="300" height="300" />
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="title" id="{{pollId}}">{{question}}</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="list-group">
+                            {{#each options}}
+                                <button id="{{this.answer}}" class="list-group-item" onClick="vote('{{this.answer}}')">
+                                    {{this.answer}} : <span id="votes">{{this.votes}}</span>
+                                </button>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 col-md-offset-1">
+                <div style="width: 40vw;">
+                    <canvas id="pie-chart-area"/>
+                </div>
+                <div id="legend"></div>
+            </div>
+        </div>
     </div>
-    <div id="legend"></div>
     <script src="/public/jquery.js"></script>
     <script src="/public/Chart.js"></script>
     <script>
         var pieData =[
-            {{! Has to recreate data to stop xss.}}
+            {{!-- Has to recreate data to stop xss.--}}
             {{#each chartData}}
             {
                 value:{{this.value}},
@@ -23,6 +41,8 @@
         ];
         var pie_ctx = document.getElementById("pie-chart-area").getContext("2d");
         window.myPie = new Chart(pie_ctx).Doughnut(pieData, {
+            responsive: true,
+            maintainAspectRatio: true,
             legendTemplate: '<ul>' +
                 '<% for (var i=0; i<pieData.length; i++) { %>' +
                 '<li>' +

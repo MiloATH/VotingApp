@@ -1,11 +1,11 @@
-<div class="container">\
-    <p>Username: {{username}} </p>
+<div class="container">
+    <p>Welcome, {{username}} </p>
     <div class="panel panel-default">
         <div class="panel-heading">Polls</div>
         <div class="panel-body">
             <div class="list-group">
                 {{#each myPolls}}
-                    <a href="/polls/{{this._id}}" class="list-group-item">
+                    <a href="/polls/{{this._id}}"  class="list-group-item">
                         <div id="{{this._id}}">
                             <h4>{{this.question}}</h4>|
                             {{#each this.options}}

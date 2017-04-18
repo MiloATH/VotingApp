@@ -30,9 +30,11 @@ function vote(answer) {
                 $("#msg").text(msg.success).addClass("alert-success");
                 var voteCounter = $("#" + answer + " #votes");
                 voteCounter.text(+voteCounter.text() + 1);
+
             } else {
                 //TODO: Better error handling ui
-                $("#msg").text('Error. Vote may not have been counted.').addClass("alert-danger");
+                $("#msg").text('Error: ' + (msg.hasOwnProperty("error") ? msg.error : "") +
+                    ' Vote may not have been counted.').addClass("alert-danger");
             }
         }
     });

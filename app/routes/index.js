@@ -134,7 +134,7 @@ module.exports = function(app, passport) {
         });
 
     app.route('/polls/:id')
-        .get(function(req, res) {
+        .get(function(req, res) { //TODO: Infinite scroll feature
             var id = req.params.id;
             if (shortid.isValid(id)) {
                 Polls.findOne({
