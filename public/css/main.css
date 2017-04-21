@@ -5,8 +5,25 @@
 }
 
 #legend-color {
-    display: block;
+    display: inline-block;
     width: 20px;
     height: 20px;
     border-radius: 5px;
+}
+
+.legend-label {
+    display: inline;
+    padding: 3px;
+}
+
+body {
+    word-wrap: break-word;
+}
+
+.delete {
+    height:100%;
+}
+
+#poll-display{
+    width:90%
 }
