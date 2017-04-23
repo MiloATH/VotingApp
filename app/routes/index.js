@@ -3,6 +3,7 @@ var Polls = require('../models/polls.js');
 var shortid = require('shortid');
 var colors = require('../utils/colors.js');
 var HIGHLIGHT_LUMINANCE = .2;
+var POLLS_PER_PAGE = 20;
 
 
 module.exports = function(app, passport) {
@@ -68,7 +69,7 @@ module.exports = function(app, passport) {
 
     app.route('/')
         .get(function(req, res) {
-            Polls.find({}).limit(20).exec(function(err, polls) {
+            Polls.find({}).limit(POLLS_PER_PAGE).exec(function(err, polls) {
                 if (err) {
                     console.log(err);
                 }
@@ -132,6 +133,24 @@ module.exports = function(app, passport) {
                 isLoggedIn: req.isAuthenticated()
             });
         });
+
+    app.route('/search')
+        .get(function(req, res) {
+            var q = req.query.q;
+            Polls.find({
+                $text: {
+                    $search: q
+                }
+            }).limit(POLLS_PER_PAGE).exec(function(err, polls) {
+                if (err) {
+                    console.log(err);
+                }
+                res.render('home', {
+                    isLoggedIn: req.isAuthenticated(),
+                    polls: polls
+                });
+            })
+        })
 
     app.route('/polls/:id')
         .get(function(req, res) { //TODO: Infinite scroll feature
@@ -221,9 +240,11 @@ module.exports = function(app, passport) {
                             return;
                         } else {
                             var found = false;
+                            var answerId;
                             for (var i = 0; i < poll.options.length; i++) {
                                 if (answer == poll.options[i].answer) {
                                     poll.options[i].votes++;
+                                    answerId = poll.options[i].id;
                                     found = true;
                                 }
                             }
@@ -250,7 +271,8 @@ module.exports = function(app, passport) {
                                     });
                                 } else {
                                     res.json({
-                                        "success": "Vote counted."
+                                        "success": "Vote counted.",
+                                        "answerId": answerId
                                     });
                                 }
                             });

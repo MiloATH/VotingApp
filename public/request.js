@@ -30,9 +30,18 @@ function vote(answer) {
                 $("#msg").text(msg.success).addClass("alert-success").fadeIn(0, function() {
                     $(this).delay(3000).fadeOut(3000);
                 });
-                //TODO: Answer could be multiple words. Should use answer ids.
-                var voteCounter = $("#" + answer + " #votes");
-                voteCounter.text(+voteCounter.text() + 1);
+                if (msg.hasOwnProperty("answerId") && msg.answerId) {
+                    var voteCounter = $("#" + msg.answerId + " #votes");
+                    voteCounter.text(+voteCounter.text() + 1);
+                    console.log(pieData);
+                    for (var i = 0; i < pieData.length; i++) {
+                        if (pieData[i].label === answer) {
+                            pieData[i].value = +voteCounter.text() + 1;
+                            updateChart();
+                            break;
+                        }
+                    }
+                }
                 //TODO Update data in piieData and call updateChart()
             } else {
                 //TODO: Better error handling ui

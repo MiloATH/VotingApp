@@ -9,7 +9,7 @@
                     <div class="panel-body">
                         <div class="list-group">
                             {{#each options}}
-                                <button id="{{this.answer}}" class="list-group-item" onClick="vote('{{this.answer}}')">
+                                <button id="{{this.id}}" class="list-group-item" onClick="vote('{{this.answer}}')">
                                     {{this.answer}} : <span id="votes">{{this.votes}}</span>
                                 </button>
                             {{/each}}

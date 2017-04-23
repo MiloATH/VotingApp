@@ -25,5 +25,8 @@ var Poll = new Schema({
         default: Date.now
     }
 });
-
+Poll.index({
+    name: 'text',
+    'question': 'text'
+});
 module.exports = mongoose.model('Poll', Poll);
