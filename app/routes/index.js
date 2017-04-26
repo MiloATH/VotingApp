@@ -246,6 +246,7 @@ module.exports = function(app, passport) {
                                     poll.options[i].votes++;
                                     answerId = poll.options[i].id;
                                     found = true;
+                                    break;
                                 }
                             }
                             if (!found) {
