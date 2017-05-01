@@ -80,4 +80,5 @@ function addOption(n) {
         </div>
     </div>`
     $('#options').append(option);
+    $('#add-option-button').attr("onclick", "addOption(" + (n + 1) + ")");
 }
