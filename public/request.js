@@ -36,7 +36,7 @@ function vote(answer) {
                     console.log(pieData);
                     for (var i = 0; i < pieData.length; i++) {
                         if (pieData[i].label === answer) {
-                            pieData[i].value = +voteCounter.text() + 1;
+                            pieData[i].value = +voteCounter.text();
                             updateChart();
                             break;
                         }
@@ -70,4 +70,14 @@ function updateChart() {
 
     var legend = myPie.generateLegend();
     $("#legend").html(legend);
+}
+
+function addOption(n) {
+    var option = `<div class="form-group row">
+        <label for="example-text-input" class="col-2 col-form-label">Option ${n}</label>
+        <div class="col-10">
+            <input class="form-control" type="text" name="options[answer${n}]">
+        </div>
+    </div>`
+    $('#options').append(option);
 }

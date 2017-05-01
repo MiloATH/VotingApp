@@ -5,20 +5,23 @@
         <div class="panel-body">
             <div class="list-group">
                 {{#each myPolls}}
-                    <div id="{{this.id}}" class="panel panel-default">
-                        <a id="poll-display" class="btn btn-default" href="/polls/{{this._id}}">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">{{this.question}}</h3>
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div id="{{this.id}}" class="panel panel-default">
+                                <a id="poll-display" class="btn btn-default" style="width:100%" href="/polls/{{this._id}}">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">{{this.question}}</h3>
+                                    </div>
+                                    <div class="panel-body">|
+                                        {{#each this.options}}
+                                            <span>{{this.answer}}</span> |
+                                        {{/each}}
+                                    </div>
+                                </a>
                             </div>
-                            <div class="panel-body">| 
-                                {{#each this.options}}
-                                    <span>{{this.answer}}</span> |
-                                {{/each}}
-                            </div>
-                        </a>
-
-                        <div class="btn-group delete" role="group">
-                            <button type="button" class="btn btn-danger delete" onclick="removePoll('{{this._id}}')">DELETE</button>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger" onclick="removePoll('{{this._id}}')">X</button>
                         </div>
                     </div>
                 {{/each}}
