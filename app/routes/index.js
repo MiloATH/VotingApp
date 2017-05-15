@@ -41,12 +41,16 @@ module.exports = function(app, passport) {
 
     function voted(req, res, poll, next) {
         var voted = false;
+        var ip = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
         if (req.isAuthenticated()) {
             var userId = req.user._id;
             var index = poll.voterUserid.indexOf(userId);
             voted = voted || index > -1;
-        } else if (req.ip) {
-            voted = voted || poll.voterIP.indexOf(req.ip) > -1;
+        } else if (ip) {
+            voted = voted || poll.voterIP.indexOf(ip) > -1;
         }
         next(voted);
     }
