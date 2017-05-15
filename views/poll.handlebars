@@ -14,12 +14,22 @@
                                 </button>
                             {{/each}}
                         </div>
+                        <div action="/api/vote" style="padding:10px 15px" method="post">
+                            <div class="form-group row">
+                                <label for="example-text-input" class="col-2 col-form-label">Other answer</label>
+                                <div class="col-10">
+                                <input class="form-control" id="other-answer" type="text" name="answer">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="vote($('#other-answer').val())">Submit</button>
+                        </div>
                     </div>
+
                 </div>
             </div>
             <div class="col-md-5 col-md-offset-1">
                 <div style="width: 40vw;">
-                    <canvas id="pie-chart-area"/>
+                    <canvas id="pie-chart-area" />
                 </div>
                 <div id="legend"></div>
             </div>
@@ -27,14 +37,14 @@
     </div>
     <script src="/public/Chart.js"></script>
     <script>
-        var pieData =[
-            {{!-- Has to recreate data to stop xss.--}}
+        var pieData = [
+            {{!--Has to recreate data to stop xss.--}}
             {{#each chartData}}
             {
-                value:{{this.value}},
-                color:"{{this.color}}",
-                highlight:"{{this.highlight}}",
-                label:"{{this.label}}"
+                value: {{this.value}},
+                color: "{{this.color}}",
+                highlight: "{{this.highlight}}",
+                label: "{{this.label}}"
             },
             {{/each}}
         ];

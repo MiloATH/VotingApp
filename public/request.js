@@ -33,14 +33,18 @@ function vote(answer) {
                 if (msg.hasOwnProperty("answerId") && msg.answerId) {
                     var voteCounter = $("#" + msg.answerId + " #votes");
                     voteCounter.text(+voteCounter.text() + 1);
-                    console.log(pieData);
+                    var updatedData = false;
                     for (var i = 0; i < pieData.length; i++) {
                         if (pieData[i].label === answer) {
                             pieData[i].value = +voteCounter.text();
-                            updateChart();
+                            updatedData = true;
                             break;
                         }
                     }
+                    if (!updatedData) {
+                        location.reload();
+                    }
+                    updateChart();
                 }
                 //TODO Update data in piieData and call updateChart()
             } else {

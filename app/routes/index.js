@@ -45,8 +45,7 @@ module.exports = function(app, passport) {
             var userId = req.user._id;
             var index = poll.voterUserid.indexOf(userId);
             voted = voted || index > -1;
-        }
-        if (req.ip) {
+        } else if (req.ip) {
             voted = voted || poll.voterIP.indexOf(req.ip) > -1;
         }
         next(voted);
@@ -250,18 +249,22 @@ module.exports = function(app, passport) {
                                 }
                             }
                             if (!found) {
+                                var randomColor = colors.colors[Math.floor(Math.random() * colors.colors.length)];
                                 poll.options.push({
                                     answer: answer,
-                                    votes: 0,
-                                    color: colors.colors[Math.floor(Math.random() * colors.colors.length)]
+                                    votes: 1,
+                                    color: randomColor
                                 })
                             }
                             if (req.isAuthenticated()) {
                                 var userId = req.user._id;
                                 poll.voterUserid.push(userId);
                             }
-                            if (req.ip) {
-                                var ip = req.ip
+                            var ip = req.headers['x-forwarded-for'] ||
+                                req.connection.remoteAddress ||
+                                req.socket.remoteAddress ||
+                                req.connection.socket.remoteAddress;
+                            if (ip) {
                                 poll.voterIP.push(ip);
                             }
                             poll.save(function(err, savedPoll) {
