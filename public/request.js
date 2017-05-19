@@ -35,7 +35,7 @@ function vote(answer) {
                 if (msg.hasOwnProperty("answerId") && msg.answerId) {
                     var voteCounter = $("#" + msg.answerId + " #votes");
                     voteCounter.text(+voteCounter.text() + 1);
-                    var label = $('#' + msg.anserId + " #answer").text();
+                    var label = $('#' + msg.answerId + " #answer").text();
                     for (var i = 0; i < pieData.length; i++) {
                         if (pieData[i].label === label) {
                             pieData[i].value = +voteCounter.text();
@@ -46,7 +46,6 @@ function vote(answer) {
                     updateChart();
                 }
                 if (!updatedData) {
-                    alert('reload')
                     location.reload();
                 }
             } else {
