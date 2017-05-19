@@ -20,6 +20,32 @@ body {
     word-wrap: break-word;
 }
 
-#poll-display{
-    //width:90%
+#poll-display {
+    display: inline-block;
+    float: left;
+    width: 90%;
+}
+
+.div-parent {
+  position: relative;
+  display:inline-block;
+  float:right;
+  width:10%;
+}
+
+.delete-btn {
+  position: absolute;
+  top: calc(50% + 50px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.poll-panel {
+    margin: 10px;
+}
+
+.ellipsis-overflow {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }

@@ -216,7 +216,7 @@ module.exports = function(app, passport) {
                         msg: "Error while making poll."
                     })
                 } else {
-                    res.redirect('/polls/' + data._id); //TODO: redirect to new poll
+                    res.redirect('/polls/' + data._id);
                 }
             });
         })
@@ -243,11 +243,9 @@ module.exports = function(app, passport) {
                             return;
                         } else {
                             var found = false;
-                            var answerId;
                             for (var i = 0; i < poll.options.length; i++) {
-                                if (answer == poll.options[i].answer) {
+                                if (answer == poll.options[i].id) {
                                     poll.options[i].votes++;
-                                    answerId = poll.options[i].id;
                                     found = true;
                                     break;
                                 }
@@ -277,10 +275,15 @@ module.exports = function(app, passport) {
                                     res.json({
                                         "error": "Poll not saved."
                                     });
+                                } else if (!found) {
+                                    //Refresh page
+                                    res.json({
+                                        "success": "Vote counted."
+                                    })
                                 } else {
                                     res.json({
                                         "success": "Vote counted.",
-                                        "answerId": answerId
+                                        "answerId": answer
                                     });
                                 }
                             });
@@ -299,16 +302,16 @@ module.exports = function(app, passport) {
             }, function(err, poll) {
                 if (err) {
                     console.log(err);
-                    res.json({
-                        error: "Error when trying to delete a poll"
-                    });
                 }
                 if (poll && poll.creatorUserid == userId) {
                     poll.remove();
                     res.json({
                         success: "Poll Deleted"
                     });
-                    //res.redirect('/profile');
+                } else {
+                    res.json({
+                        error: "Error when trying to delete a poll."
+                    });
                 }
             });
         });

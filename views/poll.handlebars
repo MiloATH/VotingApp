@@ -9,8 +9,8 @@
                     <div class="panel-body">
                         <div class="list-group">
                             {{#each options}}
-                                <button id="{{this.id}}" class="list-group-item" onClick="vote('{{this.answer}}')">
-                                    {{this.answer}} : <span id="votes">{{this.votes}}</span>
+                                <button id="{{this.id}}" class="list-group-item" onClick="vote('{{this.id}}')">
+                                    <span id="answer">{{this.answer}}</span> <span id="votes" class="pull-right">{{this.votes}}</span>
                                 </button>
                             {{/each}}
                         </div>
@@ -48,6 +48,8 @@
             },
             {{/each}}
         ];
-        updateChart();
+        window.onload = function() {
+            updateChart();
+        };
     </script>
 </div>

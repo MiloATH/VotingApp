@@ -42,6 +42,7 @@
     </nav>
     {{{body}}}
     <div class="alert fixed-msg" id="msg" role="alert">{{msg}}</div>
+    <script src="/public/request.js"></script>
     <!--USE CDN BY DEFAULT. USE SERVER AS BACKUP-->
     <!-- jQuery CDN -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -50,11 +51,11 @@
         window.jQuery || document.write('<script src="/public/jquery.min.js"><\/script>')
     </script>
     <!-- Bootstrap JS CDN -->
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Bootstrap JS local fallback -->
     <script>
         if (typeof($.fn.modal) === 'undefined') {
-            document.write('<script src="/local/bootstrap.min.js"><\/script>')
+            document.write('<script src="/public/bootstrap.min.js"><\/script>')
         }
     </script>
     <!-- Bootstrap CSS local fallback -->
@@ -66,8 +67,6 @@
             }
         });
     </script>
-    <script src="/public/request.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         (function(i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;

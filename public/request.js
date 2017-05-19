@@ -26,29 +26,30 @@ function vote(answer) {
         url: "/api/vote",
         data: data,
         success: function(msg) {
+            console.log(msg)
             if (msg.hasOwnProperty("success")) {
                 $("#msg").text(msg.success).addClass("alert-success").fadeIn(0, function() {
                     $(this).delay(3000).fadeOut(3000);
                 });
+                var updatedData = false;
                 if (msg.hasOwnProperty("answerId") && msg.answerId) {
                     var voteCounter = $("#" + msg.answerId + " #votes");
                     voteCounter.text(+voteCounter.text() + 1);
-                    var updatedData = false;
+                    var label = $('#' + msg.anserId + " #answer").text();
                     for (var i = 0; i < pieData.length; i++) {
-                        if (pieData[i].label === answer) {
+                        if (pieData[i].label === label) {
                             pieData[i].value = +voteCounter.text();
                             updatedData = true;
                             break;
                         }
                     }
-                    if (!updatedData) {
-                        location.reload();
-                    }
                     updateChart();
                 }
-                //TODO Update data in piieData and call updateChart()
+                if (!updatedData) {
+                    alert('reload')
+                    location.reload();
+                }
             } else {
-                //TODO: Better error handling ui
                 $("#msg").text('Error: ' + (msg.hasOwnProperty("error") ? msg.error : "")).addClass("alert-danger").fadeIn(0, function() {
                     $(this).delay(3000).fadeOut(3000);
                 });
