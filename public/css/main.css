@@ -27,17 +27,17 @@ body {
 }
 
 .div-parent {
-  position: relative;
-  display:inline-block;
-  float:right;
-  width:10%;
+    position: relative;
+    display: inline-block;
+    float: right;
+    width: 10%;
 }
 
 .delete-btn {
-  position: absolute;
-  top: calc(50% + 50px);
-  left: 50%;
-  transform: translate(-50%, -50%);
+    position: absolute;
+    top: calc(50% + 50px);
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .poll-panel {

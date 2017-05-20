@@ -140,9 +140,10 @@ module.exports = function(app, passport) {
     app.route('/search')
         .get(function(req, res) {
             var q = req.query.q;
+            var regexp = new RegExp(q, 'i');
             Polls.find({
-                $text: {
-                    $search: q
+                'question': {
+                    $regex: regexp
                 }
             }).limit(POLLS_PER_PAGE).exec(function(err, polls) {
                 if (err) {

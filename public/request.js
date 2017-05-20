@@ -26,7 +26,6 @@ function vote(answer) {
         url: "/api/vote",
         data: data,
         success: function(msg) {
-            console.log(msg)
             if (msg.hasOwnProperty("success")) {
                 $("#msg").text(msg.success).addClass("alert-success").fadeIn(0, function() {
                     $(this).delay(3000).fadeOut(3000);
