@@ -2,6 +2,7 @@ var signup = require('../controllers/signup.js');
 var Polls = require('../models/polls.js');
 var shortid = require('shortid');
 var colors = require('../utils/colors.js');
+var validator = require('validator');
 var HIGHLIGHT_LUMINANCE = .2;
 var POLLS_PER_PAGE = 20;
 
@@ -191,14 +192,15 @@ module.exports = function(app, passport) {
     //API
     app.route('/api/makePoll')
         .post(isLoggedIn, function(req, res) {
-            var question = req.body.question;
+            var question = validator.escape(req.body.question);
             var inputOptions = req.body.options;
             var verifiedOptions = [];
             var colorSeed = Math.floor(Math.random() * colors.colors.length);
             for (var i in inputOptions) {
                 if (i.match(/answer[0-9]+/)) {
+                    var cleanAnswer = validator.escape(inputOptions[i]);
                     verifiedOptions.push({
-                        answer: inputOptions[i],
+                        answer: cleanAnswer,
                         votes: 0,
                         color: colors.colors[(++colorSeed) % colors.colors.length]
                     })
@@ -253,8 +255,9 @@ module.exports = function(app, passport) {
                             }
                             if (!found) {
                                 var randomColor = colors.colors[Math.floor(Math.random() * colors.colors.length)];
+                                var cleanAnswer = validator.escape(answer); //Prevent XSS
                                 poll.options.push({
-                                    answer: answer,
+                                    answer: cleanAnswer,
                                     votes: 1,
                                     color: randomColor
                                 })
