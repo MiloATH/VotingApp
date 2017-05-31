@@ -1,6 +1,7 @@
 var LocalStrategy = require('passport-local');
 var User = require('../models/users');
 var bcrypt = require('bcrypt');
+var validator = require('validator');
 
 module.exports = function(passport) {
     passport.serializeUser(function(user, done) {
@@ -15,6 +16,7 @@ module.exports = function(passport) {
 
     passport.use(new LocalStrategy(
         function(username, password, done) {
+            username = validator.escape(username);
             User.findOne({
                 username: username
             }, function(err, user) {

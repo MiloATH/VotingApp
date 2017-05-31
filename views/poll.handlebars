@@ -4,13 +4,13 @@
             <div class="col-md-4 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h2 class="title" id="{{pollId}}">{{question}}</h2>
+                        <h2 class="title" id="{{pollId}}">{{{question}}}</h2>
                     </div>
                     <div class="panel-body">
                         <div class="list-group">
                             {{#each options}}
                                 <button id="{{this.id}}" class="list-group-item" onClick="vote('{{this.id}}')">
-                                    <span id="answer">{{this.answer}}</span> <span id="votes" class="pull-right">{{this.votes}}</span>
+                                    <span id="answer">{{{this.answer}}}</span> <span id="votes" class="pull-right">{{this.votes}}</span>
                                 </button>
                             {{/each}}
                         </div>
@@ -44,7 +44,7 @@
                 value: {{this.value}},
                 color: "{{this.color}}",
                 highlight: "{{this.highlight}}",
-                label: "{{this.label}}"
+                label: "{{{this.label}}}"
             },
             {{/each}}
         ];
