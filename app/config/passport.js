@@ -20,7 +20,6 @@ module.exports = function(passport) {
             User.findOne({
                 username: username
             }, function(err, user) {
-                console.log('User ' + username + ' attempted to log in.');
                 if (err) {
                     return done(err);
                 }
