@@ -10,6 +10,9 @@ var Browser = require('zombie');
 var server = require('../server');
 
 var colors = require('../app/utils/colors');
+var Users = require('../app/models/users');
+var Polls = require('../app/models/polls')
+var DBClear = require('./DBClear');
 
 describe('Unit Testing', function() {
     describe('colors.js', function() {
@@ -27,10 +30,58 @@ describe('Unit Testing', function() {
     });
 
     describe('Models', function() {
+
+        before(DBClear.connectAndClearDB);
+
+        after(DBClear.connectAndClearDB);
+
+        describe('Users', function() {
+            it('should create a new User', function(done) {
+                var user = {
+                    username: 'user',
+                    password: 'password-0'
+                };
+                Users.create(user, function(err, newUser) {
+                    assert.isNotOk(err, 'Error while creating new user');
+                    assert.equal(user.username, newUser.username, 'The new user doesn\'t have the correct username');
+                    assert.equal(user.password, newUser.password, 'The new user doesn\'t have the correct password');
+                    done();
+                });
+            });
+        });
+
         describe('Polls', function() {
-            //it('poll should have a question')
-        })
-    })
+            it('should create a new Poll', function(done) {
+                var poll = {
+                    question: 'Sample question: I can create a poll',
+                    options: [{
+                            answer: 'First Option',
+                            votes: 0,
+                            color: '#00c64a'
+                        },
+                        {
+                            answer: 'Second Option',
+                            votes: 0,
+                            color: '#00b67f'
+                        }
+                    ],
+                    creatorUserid: '000000000000000000000000'
+                };
+                Polls.create(poll, function(err, newPoll) {
+                    assert.isNotOk(err, 'Error while creating new user');
+                    assert.equal(poll.question, newPoll.question, 'The new poll doesn\'t have the correct question');
+                    for (var i = 0; i < poll.options.length; ++i) {
+                        assert.equal(poll.options[i].answer, newPoll.options[i].answer, 'The new poll doesn\'t have the correct answer');
+                        assert.equal(poll.options[i].votes, newPoll.options[i].votes, 'The new poll doesn\'t have the correct votes');
+                        assert.equal(poll.options[i].color, newPoll.options[i].color, 'The new poll doesn\'t have the correct color');
+                    }
+                    done();
+                });
+            });
+        });
+
+    });
+
 });
 
 describe('Integration Testing', function() {
@@ -63,7 +114,7 @@ describe('Integration Testing', function() {
 
     it('GET /logout', function(done) {
         chai.request(server)
-            .get('/login')
+            .get('/logout')
             .end(function(err, res) {
                 assert.equal(res.status, 200, 'response status should be 200');
                 done();
@@ -97,15 +148,15 @@ describe('Integration Testing', function() {
             });
     });
 
-    it('POST /api/vote unauthorized', function(done) {
+    /*it('POST /api/vote unauthorized', function(done) {
         chai.request(server)
-            .post('/api/makePoll')
+            .post('/api/vote')
             .send({})
             .end(function(err, res) {
                 assert.equal(res.status, 200, 'response status should be 200');
                 done();
             });
-    });
+    });*/
 
     Browser.localhost('surveysay.herokuapp.com', 8080);
 
@@ -113,26 +164,9 @@ describe('Integration Testing', function() {
 
         const browser = new Browser();
 
-        before(function(done) {
+        before(DBClear.connectAndClearDB);
 
-            function clearDB() {
-                for (var i in mongoose.connection.collections) {
-                    mongoose.connection.collections[i].remove(function() {});
-                }
-                return done();
-            }
-
-            if (mongoose.connection.readyState === 0) {
-                mongoose.connect(process.env.TEST_MONGO_URI, function(err) {
-                    if (err) {
-                        throw err;
-                    }
-                    return clearDB();
-                });
-            } else {
-                return clearDB();
-            }
-        });
+        after(DBClear.connectAndClearDB);
 
         describe('submits signup form', function() {
 
@@ -204,7 +238,7 @@ describe('Integration Testing', function() {
             var options = ['Yes', 'No'];
 
             before(function(done) {
-                browser.pressButton('Yes 0', function(err) {
+                browser.pressButton(options[0] + ' 0', function(err) {
                     //Throws err becuase zombie has issues with the canvas for the chart
                     //Wrapping done callback in a callback avoids err being thrown
                     done();
@@ -223,6 +257,4 @@ describe('Integration Testing', function() {
 
         });
     });
-
-
 });
