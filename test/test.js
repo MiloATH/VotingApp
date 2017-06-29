@@ -162,15 +162,20 @@ describe('Integration Testing', function() {
         var question = 'Can I make a poll?';
         var options = ['Yes', 'No'];
 
-        describe('vote on poll without authentication', function() {
+        before(function(done) {
+            browser.visit('/polls/' + pollID, function(err) {
+                //Throws err becuase zombie has issues with the canvas for the chart
+                //Wrapping done callback in a callback avoids err being thrown
+                done();
+            });
+        })
+
+        describe('vote on a poll without authentication', function() {
             before(function(done) {
-                browser.visit('/polls/' + pollID, function() {
-                    browser.pressButton(poll.options[0].answer + ' 0', function(err) {
-                        //Throws err becuase zombie has issues with the canvas for the chart
-                        //Wrapping done callback in a callback avoids err being thrown
-                        console.log('done');
-                        done();
-                    });
+                browser.pressButton(poll.options[0].answer + ' 0', function(err) {
+                    //Throws err becuase zombie has issues with the canvas for the chart
+                    //Wrapping done callback in a callback avoids err being thrown
+                    done();
                 });
             });
 
@@ -185,6 +190,7 @@ describe('Integration Testing', function() {
             });
 
         });
+
         describe('submits signup form', function() {
 
             before(function(done) {
