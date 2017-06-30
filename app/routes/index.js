@@ -226,8 +226,8 @@ module.exports = function(app, passport) {
 
     app.route('/api/vote')
         .post(function(req, res) {
-            var pollId = req.body.poll;//Poll ID
-            var answer = req.body.answer;//Answer ID
+            var pollId = req.body.poll; //Poll ID
+            var answer = req.body.answer; //Answer ID
             Polls.findOne({
                 _id: pollId
             }, function(err, poll) {

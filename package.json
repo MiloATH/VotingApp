@@ -4,7 +4,7 @@
   "description": "voting app",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -33,5 +33,11 @@
     "passport-local": "^1.0.0",
     "shortid": "^2.2.8",
     "validator": "^7.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^2.4.5",
+    "zombie": "^5.0.5"
   }
 }
