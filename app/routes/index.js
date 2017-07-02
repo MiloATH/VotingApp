@@ -56,8 +56,6 @@ module.exports = function(app, passport) {
         next(voted);
     }
 
-
-    //TODO: Make sure output doesn't allow xxs
     function getChartData(poll, next) {
         var data = [];
         for (var i = 0; i < poll.options.length; i++) {
@@ -121,6 +119,9 @@ module.exports = function(app, passport) {
             Polls.find({
                 creatorUserid: req.user._id
             }, function(err, polls) {
+                if (err) {
+                    console.log(err);
+                }
                 res.render('profile', {
                     isLoggedIn: req.isAuthenticated(),
                     id: req.user._id,
@@ -158,7 +159,7 @@ module.exports = function(app, passport) {
         })
 
     app.route('/polls/:id')
-        .get(function(req, res) { //TODO: Infinite scroll feature
+        .get(function(req, res) {
             var id = req.params.id;
             if (shortid.isValid(id)) {
                 Polls.findOne({
@@ -247,7 +248,7 @@ module.exports = function(app, passport) {
                         } else {
                             var found = false;
                             for (var i = 0; i < poll.options.length; i++) {
-                                if (answer == poll.options[i].id) {
+                                if (answer === poll.options[i].id) {
                                     poll.options[i].votes++;
                                     found = true;
                                     break;
