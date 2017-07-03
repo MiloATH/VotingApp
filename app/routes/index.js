@@ -3,6 +3,7 @@ var Polls = require('../models/polls.js');
 var shortid = require('shortid');
 var colors = require('../utils/colors.js');
 var validator = require('validator');
+var errorMessages = require('../utils/errorMessages');
 var HIGHLIGHT_LUMINANCE = .2;
 var POLLS_PER_PAGE = 20;
 
@@ -40,18 +41,22 @@ module.exports = function(app, passport) {
         return rgb;
     }
 
-    function voted(req, res, poll, next) {
-        var voted = false;
-        var ip = req.headers['x-forwarded-for'] ||
+    function ipAddress(req) {
+        return req.headers['x-forwarded-for'] ||
             req.connection.remoteAddress ||
             req.socket.remoteAddress ||
             req.connection.socket.remoteAddress;
+    }
+
+    function voted(req, res, poll, next) {
+        var voted = false;
+        var ip = ipAddress(req);
         if (req.isAuthenticated()) {
             var userId = req.user._id;
             var index = poll.voterUserid.indexOf(userId);
-            voted = voted || index > -1;
+            voted = index > -1;
         } else if (ip) {
-            voted = voted || poll.voterIP.indexOf(ip) > -1;
+            voted = poll.voterIP.indexOf(ip) > -1;
         }
         next(voted);
     }
@@ -82,19 +87,21 @@ module.exports = function(app, passport) {
             })
         });
 
+    function authPage(req, res, pageName) {
+        var pageParams = {
+            isLoggedIn: req.isAuthenticated()
+        }
+        if (req.query.err === 'error') {
+            pageParams.msg = {
+                text: errorMessages[pageName],
+                alert: 'alert-danger'
+            };
+        }
+        res.render(pageName, pageParams);
+    };
+
     app.route('/login')
-        .get(function(req, res) {
-            var pageParams = {
-                isLoggedIn: req.isAuthenticated()
-            }
-            if (req.query.err === 'error') {
-                pageParams.msg = {
-                    text: 'Error during login. Username and/or password are incorrect.',
-                    alert: 'alert-danger'
-                };
-            }
-            res.render('login', pageParams);
-        })
+        .get((req, res) => authPage(req, res, 'login'))
         .post(passport.authenticate('local', {
             failureRedirect: '/login?err=error'
         }), (req, res) => {
@@ -102,18 +109,7 @@ module.exports = function(app, passport) {
         });
 
     app.route('/signup')
-        .get(function(req, res) {
-            var pageParams = {
-                isLoggedIn: req.isAuthenticated()
-            }
-            if (req.query.err === 'error') {
-                pageParams.msg = {
-                    text: 'Error during signup. Please use a different username.',
-                    alert: 'alert-danger'
-                };
-            }
-            res.render('signup', pageParams);
-        })
+        .get((req, res) => authPage(req, res, 'signup'))
         .post(signup,
             passport.authenticate('local', {
                 failureRedirect: '/signup?err=error'
@@ -281,10 +277,7 @@ module.exports = function(app, passport) {
                                 var userId = req.user._id;
                                 poll.voterUserid.push(userId);
                             }
-                            var ip = req.headers['x-forwarded-for'] ||
-                                req.connection.remoteAddress ||
-                                req.socket.remoteAddress ||
-                                req.connection.socket.remoteAddress;
+                            var ip = ipAddress(req);
                             if (ip) {
                                 poll.voterIP.push(ip);
                             }
@@ -322,7 +315,7 @@ module.exports = function(app, passport) {
                 if (err) {
                     console.log(err);
                 }
-                if (poll && poll.creatorUserid == userId) {
+                if (poll && poll.creatorUserid === userId) {
                     poll.remove();
                     res.json({
                         success: "Poll Deleted"
