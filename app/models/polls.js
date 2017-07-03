@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var Poll = new Schema({
     _id: {
         type: String,
-        'default': shortid.generate
+        default: shortid.generate
     },
     question: String,
     options: [{
@@ -14,7 +14,7 @@ var Poll = new Schema({
         color: String,
         _id: {
             type: String,
-            'default': shortid.generate
+            default: shortid.generate
         }
     }],
     creatorUserid: String,

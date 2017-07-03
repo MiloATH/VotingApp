@@ -84,25 +84,39 @@ module.exports = function(app, passport) {
 
     app.route('/login')
         .get(function(req, res) {
-            res.render('login', {
+            var pageParams = {
                 isLoggedIn: req.isAuthenticated()
-            });
+            }
+            if (req.query.err === 'error') {
+                pageParams.msg = {
+                    text: 'Error during login. Username and/or password are incorrect.',
+                    alert: 'alert-danger'
+                };
+            }
+            res.render('login', pageParams);
         })
         .post(passport.authenticate('local', {
-            failureRedirect: '/login' //TODO: Should tell the user there was an error.
+            failureRedirect: '/login?err=error'
         }), (req, res) => {
             res.redirect('/profile');
         });
 
     app.route('/signup')
         .get(function(req, res) {
-            res.render('signup', {
+            var pageParams = {
                 isLoggedIn: req.isAuthenticated()
-            });
+            }
+            if (req.query.err === 'error') {
+                pageParams.msg = {
+                    text: 'Error during signup. Please use a different username.',
+                    alert: 'alert-danger'
+                };
+            }
+            res.render('signup', pageParams);
         })
         .post(signup,
             passport.authenticate('local', {
-                failureRedirect: '/signup' //TODO: Should tell the user there was an error.
+                failureRedirect: '/signup?err=error'
             }),
             (req, res, next) => {
                 res.redirect('/profile');

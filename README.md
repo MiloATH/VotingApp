@@ -1,6 +1,8 @@
 # Voting App
 This is a web application for taking polls online.
 
+[![Build Status](https://travis-ci.org/MiloATH/VotingApp.svg?branch=master)](https://travis-ci.org/MiloATH/VotingApp)
+
 ## User Stories
 Designed to have these features as listed by [FreeCodeCamp](https://www.freecodecamp.com/):
 
@@ -100,7 +102,7 @@ Easily deployed to Heroku and MLab. Remember to set environment variables on Her
 
 ## Contributing
 
-Please open any issues that you encounter on [the GitHub repo issue page](https://github.com/MiloATH/VotingApp/issues). 
+Please open any issues that you encounter on [the GitHub repo issue page](https://github.com/MiloATH/VotingApp/issues).
 
 ## Authors
 

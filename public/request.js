@@ -8,7 +8,6 @@ function removePoll(id) {
             if (msg.hasOwnProperty("success")) {
                 $("#" + id).remove();
             } else {
-                //TODO: Better error handling ui
                 $("#msg").text("Error. Can't delete this poll.").addClass("alert-danger");
             }
         }
