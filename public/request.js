@@ -1,7 +1,9 @@
 function removePoll(id) {
-    var data = "pollId=" + id;
+    var data = {
+        pollId: id
+    };
     $.ajax({
-        type: "DELETE",
+        type: "POST",
         url: "/api/delete",
         data: data,
         success: function(msg) {

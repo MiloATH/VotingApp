@@ -284,7 +284,7 @@ module.exports = function(app, passport) {
         });
 
     app.route('/api/delete')
-        .delete(isLoggedIn, function(req, res) {
+        .post(isLoggedIn, function(req, res) {
             var pollId = req.body.pollId;
             var userId = req.user._id;
             Polls.findOne({
@@ -293,7 +293,7 @@ module.exports = function(app, passport) {
                 if (err) {
                     console.log(err);
                 }
-                if (poll && poll.creatorUserid === userId) {
+                if (poll && poll.creatorUserid == userId) {
                     poll.remove();
                     res.json({
                         success: "Poll Deleted"

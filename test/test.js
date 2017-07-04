@@ -285,6 +285,31 @@ describe('Integration Testing', function() {
 
         });
 
+        describe('delete poll', function() {
+
+            before(function(done) {
+                browser.visit('/profile', function() {
+                    browser.pressButton('X', done);
+                })
+            });
+
+            it('should delete poll in database', function(done) {
+                Polls.find({
+                    question: question
+                }).exec(function(err, polls) {
+                    assert.equal(polls.length, 0,
+                        'There shouldn\'t be any polls with the question: "' +
+                        question + '" in the database when the poll is deleted.');
+                    done();
+                });
+            });
+
+            it('should not display deleted poll', function(done) {
+                browser.assert.text('.list-group', '');
+                done();
+            });
+        });
+
         describe('logout', function() {
 
             before(function(done) {
