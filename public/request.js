@@ -12,7 +12,7 @@ function removePoll(id) {
             }
         }
     });
-};
+}
 
 function vote(answer) {
     var poll = $('.title').attr("id");
@@ -53,7 +53,7 @@ function vote(answer) {
             }
         }
     });
-};
+}
 
 function updateChart() {
     if (window.myPie !== undefined)

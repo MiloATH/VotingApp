@@ -1,7 +1,7 @@
-var signup = require('../controllers/signup.js');
-var Polls = require('../models/polls.js');
+var signup = require('../controllers/signup');
+var Polls = require('../models/polls');
 var shortid = require('shortid');
-var colors = require('../utils/colors.js');
+var colors = require('../utils/colors');
 var validator = require('validator');
 var errorMessages = require('../utils/errorMessages');
 var HIGHLIGHT_LUMINANCE = .2;
@@ -17,28 +17,6 @@ module.exports = function(app, passport) {
         } else {
             res.redirect('/login');
         }
-    }
-
-    //From https://www.sitepoint.com/javascript-generate-lighter-darker-color/
-    function ColorLuminance(hex, lum) {
-
-        // validate hex string
-        hex = String(hex).replace(/[^0-9a-f]/gi, '');
-        if (hex.length < 6) {
-            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-        }
-        lum = lum || 0;
-
-        // convert to decimal and change luminosity
-        var rgb = "#",
-            c, i;
-        for (i = 0; i < 3; i++) {
-            c = parseInt(hex.substr(i * 2, 2), 16);
-            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-            rgb += ("00" + c).substr(c.length);
-        }
-
-        return rgb;
     }
 
     function ipAddress(req) {
@@ -67,7 +45,7 @@ module.exports = function(app, passport) {
             data.push({
                 value: poll.options[i].votes,
                 color: poll.options[i].color,
-                highlight: ColorLuminance(poll.options[i].color, HIGHLIGHT_LUMINANCE),
+                highlight: colors.ColorLuminance(poll.options[i].color, HIGHLIGHT_LUMINANCE),
                 label: poll.options[i].answer
             });
         }
@@ -98,7 +76,7 @@ module.exports = function(app, passport) {
             };
         }
         res.render(pageName, pageParams);
-    };
+    }
 
     app.route('/login')
         .get((req, res) => authPage(req, res, 'login'))
@@ -330,11 +308,11 @@ module.exports = function(app, passport) {
 
     //404 Not Found
     app.use((req, res, next) => {
+        res.status(404)
         if (req.accepts('html')) {
             res.render('404');
         } else {
-            res.status(404)
-                .type('text')
+            res.type('text')
                 .send('Not Found');
         }
     });

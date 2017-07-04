@@ -8,7 +8,7 @@ module.exports = function(req, res, next) {
         username: username
     }, function(err, user) {
         if (err) {
-            next(err);
+            return next(err);
         } else if (user) {
             res.render('signup', {
                 msg: "Username already taken.",
@@ -24,7 +24,7 @@ module.exports = function(req, res, next) {
                 if (err) {
                     res.redirect('/');
                 } else {
-                    next(null, user);
+                    return next(null, user);
                 }
             });
 

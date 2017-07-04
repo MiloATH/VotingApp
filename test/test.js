@@ -16,6 +16,7 @@ var passport = require('../app/config/passport');
 var DBClear = require('./DBClear');
 
 var pollID;
+var userID;
 
 before(DBClear.connectAndClearDB);
 
@@ -50,6 +51,7 @@ describe('Unit Testing', function() {
                     assert.isNotOk(err, 'Error while creating new user');
                     assert.equal(user.username, newUser.username, 'The new user doesn\'t have the correct username');
                     assert.equal(user.password, newUser.password, 'The new user doesn\'t have the correct password');
+                    userID = newUser._id;
                     done();
                 });
             });
@@ -70,7 +72,7 @@ describe('Unit Testing', function() {
                             color: '#00b67f'
                         }
                     ],
-                    creatorUserid: '000000000000000000000000'
+                    creatorUserid: userID
                 };
                 Polls.create(poll, function(err, newPoll) {
                     pollID = newPoll._id;
@@ -149,6 +151,15 @@ describe('Integration Testing', function() {
             .get('/search')
             .end(function(err, res) {
                 assert.equal(res.status, 200, 'response status should be 200');
+                done();
+            });
+    });
+
+    it('GET /not-a-page', function(done) {
+        chai.request(server)
+            .get('/not-a-page')
+            .end(function(err, res) {
+                assert.equal(res.status, 404, 'response status should be 404');
                 done();
             });
     });
