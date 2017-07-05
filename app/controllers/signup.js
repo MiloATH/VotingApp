@@ -10,10 +10,7 @@ module.exports = function(req, res, next) {
         if (err) {
             return next(err);
         } else if (user) {
-            res.render('signup', {
-                msg: "Username already taken.",
-                isLoggedIn: req.isAuthenticated()
-            });
+            res.redirect('/signup?err=error');
         } else {
             var hash = bcrypt.hashSync(req.body.password, 8);
             var newUser = new User({

@@ -328,5 +328,60 @@ describe('Integration Testing', function() {
                 done();
             });
         });
+
+        describe('fail login with incorrect password and username', function() {
+
+            before(function(done) {
+                browser.visit('/login', function() {
+                    browser
+                        .fill('username', 'not-a-zombie')
+                        .fill('password', 'save-the-dead')
+                        .pressButton('Submit', done);
+                });
+            });
+
+            it('should redirect to login?err=error page', function(done) {
+                assert.equal(browser.url, process.env.siteURL + '/login?err=error');
+                done();
+            });
+
+            it('should alert about incorrect password and username', function(done) {
+                browser.assert.text('.alert-danger', 'Error during login. Username and/or password are incorrect.');
+                done();
+            });
+
+            it('should display login and signup in navbar', function(done) {
+                browser.assert.text('ul.nav.navbar-nav.navbar-right', 'Login Signup');
+                done();
+            });
+        });
+
+
+        describe('try to signup with an already taken username', function() {
+
+            before(function(done) {
+                browser.visit('/signup', function() {
+                    browser
+                        .fill('username', 'zombie')
+                        .fill('password', 'example-password')
+                        .pressButton('Submit', done);
+                });
+            });
+
+            it('should redirect to signup?err=error page', function(done) {
+                assert.equal(browser.url, process.env.siteURL + '/signup?err=error');
+                done();
+            });
+
+            it('should show alert about incorrect username', function(done) {
+                browser.assert.text('.alert-danger', 'Error during signup. Please use a different username.');
+                done();
+            });
+
+            it('should display login and signup in navbar', function(done) {
+                browser.assert.text('ul.nav.navbar-nav.navbar-right', 'Login Signup');
+                done();
+            });
+        });
     });
 });

@@ -21,14 +21,12 @@ body {
 }
 
 #poll-display {
-    display: inline-block;
     float: left;
     width: 90%;
 }
 
 .div-parent {
     position: relative;
-    display: inline-block;
     float: right;
     width: 10%;
 }

@@ -90,7 +90,7 @@ module.exports = function(app, passport) {
         .get((req, res) => authPage(req, res, 'signup'))
         .post(signup,
             passport.authenticate('local', {
-                failureRedirect: '/signup?err=error'
+                failureRedirect: '/login?err=error'
             }),
             (req, res, next) => {
                 res.redirect('/profile');
@@ -288,12 +288,13 @@ module.exports = function(app, passport) {
             var pollId = req.body.pollId;
             var userId = req.user._id;
             Polls.findOne({
-                _id: pollId
+                _id: pollId,
+                creatorUserid: userId
             }, function(err, poll) {
                 if (err) {
                     console.log(err);
                 }
-                if (poll && poll.creatorUserid == userId) {
+                if (poll) {
                     poll.remove();
                     res.json({
                         success: "Poll Deleted"
