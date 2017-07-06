@@ -4,6 +4,7 @@ var shortid = require('shortid');
 var colors = require('../utils/colors');
 var validator = require('validator');
 var errorMessages = require('../utils/errorMessages');
+var logger = require('../utils/logger');
 var HIGHLIGHT_LUMINANCE = .2;
 var POLLS_PER_PAGE = 20;
 
@@ -55,9 +56,7 @@ module.exports = function(app, passport) {
     app.route('/')
         .get(function(req, res) {
             Polls.find({}).limit(POLLS_PER_PAGE).exec(function(err, polls) {
-                if (err) {
-                    console.log(err);
-                }
+                logger.error(err)
                 res.render('home', {
                     isLoggedIn: req.isAuthenticated(),
                     polls: polls
@@ -107,9 +106,7 @@ module.exports = function(app, passport) {
             Polls.find({
                 creatorUserid: req.user._id
             }, function(err, polls) {
-                if (err) {
-                    console.log(err);
-                }
+                logger.error(err)
                 res.render('profile', {
                     isLoggedIn: req.isAuthenticated(),
                     id: req.user._id,
@@ -136,9 +133,7 @@ module.exports = function(app, passport) {
                     $regex: regexp
                 }
             }).limit(POLLS_PER_PAGE).exec(function(err, polls) {
-                if (err) {
-                    console.log(err);
-                }
+                logger.error(err)
                 res.render('home', {
                     isLoggedIn: req.isAuthenticated(),
                     polls: polls
@@ -153,9 +148,8 @@ module.exports = function(app, passport) {
                 Polls.findOne({
                     _id: id
                 }, function(err, poll) {
-                    if (err) {
-                        console.log(err);
-                    } else if (poll) {
+                    logger.error(err)
+                    if (poll) {
                         voted(req, res, poll, function(voted) {
                             getChartData(poll, function(data) {
                                 res.render('poll', {
@@ -201,8 +195,7 @@ module.exports = function(app, passport) {
                 creatorUserid: req.user._id
             });
             poll.save(function(err, data) {
-                if (err) {
-                    console.log(err);
+                if (logger.error(err)) {
                     res.render('make', {
                         isLoggedIn: req.isAuthenticated(),
                         msg: "Error while making poll."
@@ -220,8 +213,7 @@ module.exports = function(app, passport) {
             Polls.findOne({
                 _id: pollId
             }, function(err, poll) {
-                if (err) {
-                    console.log(err);
+                if (logger.error(err)) {
                     res.json({
                         "error": "Poll not found. Vote not counted."
                     });
@@ -260,8 +252,7 @@ module.exports = function(app, passport) {
                                 poll.voterIP.push(ip);
                             }
                             poll.save(function(err, savedPoll) {
-                                if (err) {
-                                    console.log(err)
+                                if (logger.error(err)) {
                                     res.json({
                                         "error": "Poll not saved."
                                     });
@@ -291,9 +282,7 @@ module.exports = function(app, passport) {
                 _id: pollId,
                 creatorUserid: userId
             }, function(err, poll) {
-                if (err) {
-                    console.log(err);
-                }
+                logger.error(err)
                 if (poll) {
                     poll.remove();
                     res.json({
