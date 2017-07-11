@@ -2,6 +2,8 @@
 This is a web application for taking polls online.
 
 [![Build Status](https://travis-ci.org/MiloATH/VotingApp.svg?branch=master)](https://travis-ci.org/MiloATH/VotingApp)
+[![Dependencies Status](https://david-dm.org/MiloATH/VotingApp.svg)](https://david-dm.org/MiloATH/VotingApp)
+[![Test Coverage](https://img.shields.io/codecov/c/github/MiloATH/VotingApp/master.svg)](https://codecov.io/gh/MiloATH/VotingApp)
 
 ## User Stories
 Designed to have these features as listed by [FreeCodeCamp](https://www.freecodecamp.com/):
