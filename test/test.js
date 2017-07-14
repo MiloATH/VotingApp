@@ -37,6 +37,21 @@ describe('Unit Testing', function() {
             }
             done();
         });
+
+        it('HIGHLIGHT_LUMINANCE should have a value', function(done){
+            assert(typeof colors.HIGHLIGHT_LUMINANCE === 'number');
+            done();
+        })
+
+        it('ColorLuminance should accept a hex color of length 6 and return a color', function(done){
+            assert.equal(colors.ColorLuminance('#f6e550', colors.HIGHLIGHT_LUMINANCE), '#ffff60');
+            done();
+        });
+
+        it('ColorLuminance should accept a hex color of length 3 and return a color', function(done){
+            assert.equal(colors.ColorLuminance('#fe5', colors.HIGHLIGHT_LUMINANCE), '#ffff66');
+            done();
+        })
     });
 
     describe('Models', function() {

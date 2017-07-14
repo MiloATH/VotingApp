@@ -33,7 +33,7 @@
     "passport-github": "^1.1.0",
     "passport-local": "^1.0.0",
     "shortid": "^2.2.8",
-    "validator": "^7.0.0"
+    "validator": "^8.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

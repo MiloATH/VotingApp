@@ -33,5 +33,6 @@ module.exports = {
         }
 
         return rgb;
-    }
+    },
+    HIGHLIGHT_LUMINANCE: .2
 };

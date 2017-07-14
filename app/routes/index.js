@@ -5,7 +5,6 @@ var colors = require('../utils/colors');
 var validator = require('validator');
 var errorMessages = require('../utils/errorMessages');
 var logger = require('../utils/logger');
-var HIGHLIGHT_LUMINANCE = .2;
 var POLLS_PER_PAGE = 20;
 
 
@@ -46,7 +45,7 @@ module.exports = function(app, passport) {
             data.push({
                 value: poll.options[i].votes,
                 color: poll.options[i].color,
-                highlight: colors.ColorLuminance(poll.options[i].color, HIGHLIGHT_LUMINANCE),
+                highlight: colors.ColorLuminance(poll.options[i].color, colors.HIGHLIGHT_LUMINANCE),
                 label: poll.options[i].answer
             });
         }
