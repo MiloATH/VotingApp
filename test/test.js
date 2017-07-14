@@ -265,21 +265,25 @@ describe('Integration Testing', function() {
 
         describe('vote on poll', function() {
 
+            var otherOption = 'Other answer';
+
             before(function(done) {
-                browser.pressButton(options[0] + ' 0', function(err) {
+                browser
+                    .fill('answer',otherOption)
+                    .pressButton('Submit', function(err) {
                     //Throws err becuase zombie has issues with the canvas for the chart
                     //Wrapping done callback in a callback avoids err being thrown
                     done();
                 });
             });
 
-            it('should tell the user the vote counted', function(done) {
-                browser.assert.text('.alert.fixed-msg', 'Vote counted.');
+            it('should add the additional option', function(done) {
+                browser.assert.text('#answer', options.join('') + otherOption);
                 done();
             });
 
             it('should increase the number of votes by 1', function(done) {
-                browser.assert.text('span#votes', '1' + '0'.repeat(options.length - 1));
+                browser.assert.text('span#votes', '0'.repeat(options.length) + '1');
                 done();
             });
 
