@@ -5,6 +5,7 @@ var passport = require('passport');
 var exphbs = require('express-handlebars');
 var session = require('express-session');
 var bodyParser = require('body-parser');
+var helmet = require('helmet');
 
 var app = express();
 require('dotenv').load();
@@ -14,6 +15,11 @@ mongoose.connect(process.env.NODE_ENV === 'test' ?
     process.env.TEST_MONGO_URI : process.env.MONGO_URI);
 
 mongoose.Promise = global.Promise;
+
+app.use(helmet.hidePoweredBy());
+app.use(helmet.xssFilter());
+app.use(helmet.noSniff());
+app.use(helmet.ieNoOpen());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
