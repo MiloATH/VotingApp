@@ -33,6 +33,7 @@ app.set('view engine', 'handlebars');
 
 
 app.use('/public', express.static(process.cwd() + '/public'));
+app.use('/favicon.ico', express.static('images/favicon.ico'));
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
