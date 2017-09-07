@@ -33,8 +33,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 Things you need to install to run the app:
 
-- Node
-- MongoDB
+- [Node](https://nodejs.org/en/download/)
+- [MongoDB](https://docs.mongodb.com/manual/installation/)
 
 ### Installing
 
@@ -72,11 +72,15 @@ node server
 
 Access the app through browser on localhost:8080 as the address.
 
-<!--## Running the tests
+## Running the tests
 
-TODO
+Once you have the project installed and configured, you can run the tests. Make sure that MongoDB is running (`mongod`).
 
-### Break down into end to end tests
+```
+npm test
+```
+
+<!--### Break down into end to end tests
 
 Explain what these tests test and why
 
