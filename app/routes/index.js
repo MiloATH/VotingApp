@@ -73,6 +73,12 @@ module.exports = function(app, passport) {
                 alert: 'alert-danger'
             };
         }
+        if (req.query.err === 'short') {
+            pageParams.msg = {
+                text: errorMessages['short'],
+                alert: 'alert-danger'
+            };
+        }
         res.render(pageName, pageParams);
     }
 
