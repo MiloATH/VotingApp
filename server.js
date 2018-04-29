@@ -6,6 +6,7 @@ var exphbs = require('express-handlebars');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
+var compression = require('compression');
 
 var app = express();
 require('dotenv').load();
@@ -15,6 +16,8 @@ mongoose.connect(process.env.NODE_ENV === 'test' ?
     process.env.TEST_MONGO_URI : process.env.MONGO_URI, { useMongoClient: true });
 
 mongoose.Promise = global.Promise;
+
+app.use(compression());
 
 app.use(helmet.hidePoweredBy());
 app.use(helmet.xssFilter());
