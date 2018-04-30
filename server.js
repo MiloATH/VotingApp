@@ -13,7 +13,7 @@ require('dotenv').load();
 require('./app/config/passport')(passport);
 
 mongoose.connect(process.env.NODE_ENV === 'test' ?
-    process.env.TEST_MONGO_URI : process.env.MONGO_URI, { useMongoClient: true });
+    process.env.TEST_MONGO_URI : process.env.MONGO_URI);
 
 mongoose.Promise = global.Promise;
 
