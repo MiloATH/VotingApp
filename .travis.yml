@@ -11,6 +11,11 @@ addons:
       - g++-4.8
 services:
   - mongodb
+install:
+  - npm install -g codecov
 cache:
   directories:
     - node_modules
+script:
+  - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
+  - codecov
