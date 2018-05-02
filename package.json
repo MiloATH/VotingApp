@@ -40,6 +40,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
+    "istanbul": "^0.4.5",
     "mocha": "^2.4.5",
     "zombie": "^5.0.5"
   }

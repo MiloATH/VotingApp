@@ -13,9 +13,10 @@ services:
   - mongodb
 install:
   - npm install -g codecov
+  - npm install --no-optional
 cache:
   directories:
     - node_modules
 script:
-  - npm run test-cover
+  - istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --timeout 15000 
   - codecov
