@@ -5,6 +5,7 @@ var colors = require('../utils/colors');
 var validator = require('validator');
 var errorMessages = require('../utils/errorMessages');
 var logger = require('../utils/logger');
+var escapeStringRegexp = require('escape-string-regexp');
 var POLLS_PER_PAGE = 20;
 
 
@@ -131,7 +132,7 @@ module.exports = function(app, passport) {
 
     app.route('/search')
         .get(function(req, res) {
-            var q = req.query.q;
+            var q = escapeStringRegexp(req.query.q);
             var regexp = new RegExp(q, 'i');
             Polls.find({
                 'question': {
