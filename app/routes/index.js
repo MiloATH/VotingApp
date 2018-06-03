@@ -132,8 +132,8 @@ module.exports = function(app, passport) {
 
     app.route('/search')
         .get(function(req, res) {
-            var q = escapeStringRegexp(req.query.q);
-            var regexp = new RegExp(q, 'i');
+            var q = req.query.q || '';
+            var regexp = new RegExp(escapeStringRegexp(q), 'i');
             Polls.find({
                 'question': {
                     $regex: regexp
