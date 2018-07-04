@@ -22,7 +22,7 @@ app.use(compression());
 
 if (process.env.NODE_ENV === 'production') {
     // Force HTTPS
-    app.use(enforce.HTTPS());
+    app.use(enforce.HTTPS({ trustProtoHeader: true }));
 }
 
 app.use(helmet.hidePoweredBy());
