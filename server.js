@@ -1,23 +1,29 @@
+var bodyParser = require('body-parser');
+var compression = require('compression');
+var enforce = require('express-sslify');
+var exphbs = require('express-handlebars');
 var express = require('express');
-var routes = require('./app/routes/index.js');
+var helmet = require('helmet');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var exphbs = require('express-handlebars');
+var routes = require('./app/routes/index.js');
 var session = require('express-session');
-var bodyParser = require('body-parser');
-var helmet = require('helmet');
-var compression = require('compression');
 
 var app = express();
 require('dotenv').load();
 require('./app/config/passport')(passport);
 
 mongoose.connect(process.env.NODE_ENV === 'test' ?
-    process.env.TEST_MONGO_URI : process.env.MONGO_URI);
+    process.env.TEST_MONGO_URI : process.env.MONGO_URI, { useNewUrlParser: true });
 
 mongoose.Promise = global.Promise;
 
 app.use(compression());
+
+if (process.env.NODE_ENV === 'production') {
+    // Force HTTPS
+    app.use(enforce.HTTPS());
+}
 
 app.use(helmet.hidePoweredBy());
 app.use(helmet.xssFilter());
