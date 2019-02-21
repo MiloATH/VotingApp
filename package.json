@@ -21,30 +21,30 @@
   },
   "homepage": "https://github.com/MiloATH/VotingApp#readme",
   "dependencies": {
-    "bcrypt": "^2.0.1",
+    "bcrypt": "^3.0.4",
     "body-parser": "^1.17.1",
-    "compression": "^1.7.2",
-    "dotenv": "^6.0.0",
+    "compression": "^1.7.3",
+    "dotenv": "^6.2.0",
     "escape-string-regexp": "^1.0.5",
-    "express": "^4.15.4",
-    "express-handlebars": "^3.0.0",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.1",
     "express-session": "^1.15.5",
     "express-sslify": "^1.2.0",
-    "handlebars": "^4.0.6",
-    "helmet": "^3.8.1",
-    "mongoose": "^5.2.1",
+    "handlebars": "^4.1.0",
+    "helmet": "^3.15.1",
+    "mongoose": "^5.4.14",
     "passport": "^0.4.0",
     "passport-github": "^1.1.0",
     "passport-local": "^1.0.0",
-    "shortid": "^2.2.8",
+    "shortid": "^2.2.14",
     "url-parse": "^1.4.4",
-    "validator": "^10.4.0"
+    "validator": "^10.11.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-http": "^4.0.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
-    "zombie": "^5.0.5"
+    "zombie": "^6.1.4"
   }
 }
