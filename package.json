@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --exit",
-    "test-cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --timeout 15000 --exit"
+    "test-cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --timeout 15000 --exit",
+    "lint": "./node_modules/.bin/eslint \"**/*.js\" --ignore-pattern node_modules/ --ignore-pattern public/",
+    "fix": "./node_modules/.bin/eslint --fix \"**/*.js\" --ignore-pattern node_modules/ --ignore-pattern public/"
   },
   "repository": {
     "type": "git",
@@ -43,6 +45,8 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "eslint": "^6.0.1",
+    "eslint-config-google": "^0.13.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "zombie": "^6.1.4"
