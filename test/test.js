@@ -11,7 +11,7 @@ var server = require('../server');
 
 var colors = require('../app/utils/colors');
 var Users = require('../app/models/users');
-var Polls = require('../app/models/polls')
+var Polls = require('../app/models/polls');
 var passport = require('../app/config/passport');
 var DBClear = require('./DBClear');
 
@@ -91,7 +91,7 @@ describe('Unit Testing', function() {
                 };
                 Polls.create(poll, function(err, newPoll) {
                     pollID = newPoll._id;
-                    assert.isNotOk(err, 'Error while creating new user');
+                    assert.isNotOk(err, 'Error while creating new poll');
                     assert.equal(poll.question, newPoll.question, 'The new poll doesn\'t have the correct question');
                     for (var i = 0; i < poll.options.length; ++i) {
                         assert.equal(poll.options[i].answer, newPoll.options[i].answer, 'The new poll doesn\'t have the correct answer');
@@ -221,11 +221,11 @@ describe('Integration Testing', function() {
 
             before(function(done) {
                 browser.visit('/signup', function() {
-                    browser
-                        .fill('username', 'zombie')
-                        .fill('password', 'eat-the-living')
-                        .pressButton('Submit', done);
-
+                    browser.fill('username', 'zombie').then(function() {
+                        browser.fill('password', 'eat-the-living').then(function() {
+                            browser.pressButton('Submit', done);
+                        });
+                    });
                 });
             });
 
@@ -244,15 +244,17 @@ describe('Integration Testing', function() {
 
             before(function(done) {
                 browser.visit('/make', function() {
-                    browser
-                        .fill('question', question)
-                        .fill('options[answer1]', options[0])
-                        .fill('options[answer2]', options[1])
-                        .pressButton('Submit', function(err) {
-                            //Throws err becuase zombie has issues with the canvas for the chart
-                            //Wrapping done callback in a callback avoids err being thrown
-                            done();
-                        });
+                    browser.fill('question', question).then(function() {
+                        browser.fill('options[answer1]', options[0]).then(function() {
+                            browser.fill('options[answer2]', options[1]).then(function() {
+                                browser.pressButton('Submit', function(err) {
+                                    // Throws err because zombie has issues with the canvas for the chart
+                                    // Wrapping done callback in a callback avoids err being thrown
+                                    done();
+                                })
+                            })
+                        })
+                    });
                 });
             });
 
@@ -283,12 +285,12 @@ describe('Integration Testing', function() {
             var otherOption = 'Other answer';
 
             before(function(done) {
-                browser
-                    .fill('answer',otherOption)
-                    .pressButton('Submit', function(err) {
-                    //Throws err becuase zombie has issues with the canvas for the chart
-                    //Wrapping done callback in a callback avoids err being thrown
-                    done();
+                browser.fill('answer', otherOption).then(function() {
+                    browser.pressButton('Submit', function(err) {
+                        // Throws err because zombie has issues with the canvas for the chart
+                        // Wrapping done callback in a callback avoids err being thrown
+                        done();
+                    });
                 });
             });
 
@@ -352,10 +354,11 @@ describe('Integration Testing', function() {
 
             before(function(done) {
                 browser.visit('/login', function() {
-                    browser
-                        .fill('username', 'not-a-zombie')
-                        .fill('password', 'save-the-dead')
-                        .pressButton('Submit', done);
+                    browser.fill('username', 'not-a-zombie').then(function() {
+                        browser.fill('password', 'save-the-dead').then(function() {
+                            browser.pressButton('Submit', done);
+                        });
+                    });
                 });
             });
 
@@ -380,10 +383,11 @@ describe('Integration Testing', function() {
 
             before(function(done) {
                 browser.visit('/signup', function() {
-                    browser
-                        .fill('username', 'zombie')
-                        .fill('password', 'example-password')
-                        .pressButton('Submit', done);
+                    browser.fill('username', 'zombie').then(function() {
+                        browser.fill('password', 'example-password').then(function() {
+                            browser.pressButton('Submit', done);
+                        });
+                    });
                 });
             });
 
