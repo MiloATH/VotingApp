@@ -1,28 +1,30 @@
-var bodyParser = require('body-parser');
-var compression = require('compression');
-var enforce = require('express-sslify');
-var exphbs = require('express-handlebars');
-var express = require('express');
-var helmet = require('helmet');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var routes = require('./app/routes/index.js');
-var session = require('express-session');
+const bodyParser = require('body-parser');
+const compression = require('compression');
+const enforce = require('express-sslify');
+const exphbs = require('express-handlebars');
+const express = require('express');
+const helmet = require('helmet');
+const mongoose = require('mongoose');
+const passport = require('passport');
+const routes = require('./app/routes/index.js');
+const session = require('express-session');
 
-var app = express();
+const app = express();
 require('dotenv').load();
 require('./app/config/passport')(passport);
 
 mongoose.connect(process.env.NODE_ENV === 'test' ?
-    process.env.TEST_MONGO_URI : process.env.MONGO_URI, { useNewUrlParser: true });
+    process.env.TEST_MONGO_URI : process.env.MONGO_URI,
+{useNewUrlParser: true});
 
 mongoose.Promise = global.Promise;
 
 app.use(compression());
 
 if (process.env.NODE_ENV === 'production') {
-    // Force HTTPS
-    app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  // Force HTTPS
+  app.use(enforce.HTTPS( // eslint-disable-line new-cap
+      {trustProtoHeader: true}));
 }
 
 app.use(helmet.hidePoweredBy());
@@ -32,11 +34,11 @@ app.use(helmet.ieNoOpen());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+  extended: true,
 }));
 
 app.engine('handlebars', exphbs({
-    defaultLayout: 'main'
+  defaultLayout: 'main',
 }));
 app.set('view engine', 'handlebars');
 
@@ -45,9 +47,9 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/favicon.ico', express.static('images/favicon.ico'));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
 }));
 
 app.use(passport.initialize());
@@ -55,9 +57,9 @@ app.use(passport.session());
 
 routes(app, passport);
 
-var port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 app.listen(port, function() {
-    console.log('Listening on port ' + port + '...');
+  console.log('Listening on port ' + port + '...');
 });
 
 module.exports = app;
