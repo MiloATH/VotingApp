@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --exit",
-    "test-cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --timeout 15000 --exit"
+    "test-cover": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --timeout 15000 --exit",
+    "lint": "./node_modules/.bin/eslint \"**/*.js\" --ignore-pattern node_modules/ --ignore-pattern public/",
+    "fix": "./node_modules/.bin/eslint --fix \"**/*.js\" --ignore-pattern node_modules/ --ignore-pattern public/"
   },
   "repository": {
     "type": "git",
