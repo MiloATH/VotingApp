@@ -14,7 +14,7 @@ module.exports = {
         "#ff0049"
     ],
     //From https://www.sitepoint.com/javascript-generate-lighter-darker-color/
-    ColorLuminance: function(hex, lum) {
+    colorLuminance: function(hex, lum) {
 
         // validate hex string
         hex = String(hex).replace(/[^0-9a-f]/gi, '');

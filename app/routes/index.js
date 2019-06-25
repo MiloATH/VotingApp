@@ -46,7 +46,7 @@ module.exports = function(app, passport) {
             data.push({
                 value: poll.options[i].votes,
                 color: poll.options[i].color,
-                highlight: colors.ColorLuminance(poll.options[i].color, colors.HIGHLIGHT_LUMINANCE),
+                highlight: colors.colorLuminance(poll.options[i].color, colors.HIGHLIGHT_LUMINANCE),
                 label: poll.options[i].answer
             });
         }
