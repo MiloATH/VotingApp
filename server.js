@@ -10,7 +10,7 @@ const routes = require('./app/routes/index.js');
 const session = require('express-session');
 
 const app = express();
-require('dotenv').load();
+require('dotenv').config();
 require('./app/config/passport')(passport);
 
 mongoose.connect(process.env.NODE_ENV === 'test' ?
