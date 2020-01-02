@@ -1,6 +1,5 @@
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const enforce = require('express-sslify');
 const exphbs = require('express-handlebars');
 const express = require('express');
 const helmet = require('helmet');
@@ -20,13 +19,6 @@ mongoose.connect(process.env.NODE_ENV === 'test' ?
 mongoose.Promise = global.Promise;
 
 app.use(compression());
-
-if (process.env.NODE_ENV === 'production') {
-  // Force HTTPS
-  app.use(enforce.HTTPS( // eslint-disable-line new-cap
-      {trustProtoHeader: true}));
-}
-
 app.use(helmet.hidePoweredBy());
 app.use(helmet.xssFilter());
 app.use(helmet.noSniff());
