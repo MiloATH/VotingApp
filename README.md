@@ -1,5 +1,5 @@
 # Voting App
-This is a web application for taking polls online.
+This is a web application for taking polls online. This application is no longer live.
 
 [![Build Status](https://travis-ci.org/MiloATH/VotingApp.svg?branch=master)](https://travis-ci.org/MiloATH/VotingApp)
 [![Dependencies Status](https://david-dm.org/MiloATH/VotingApp.svg)](https://david-dm.org/MiloATH/VotingApp)
