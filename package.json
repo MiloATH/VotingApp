@@ -48,7 +48,7 @@
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.13.0",
     "istanbul": "^0.4.5",
-    "mocha": "^6.2.2",
+    "mocha": "^10.2.0",
     "zombie": "^6.1.4"
   },
   "engines": {
